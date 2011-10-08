@@ -48,8 +48,7 @@ exports.fenPosToBoard = function(fenPos) {
 // if the e1g1 move is issued, we assume we had already done move validation
 // and we go ahead and resolve the castle. we also have to check for promotion.
 exports.updateBoardMSAN = function(board,msanMove){
-	// work on a copy of board because sometimes we pass a canonical reference board
-	// like startboard
+    msanMove = msanMove.toString();
 	var _board = mlib.copy(board); // work on a copy 
 	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
 	var start = msanMove.slice(0,2).trim(); var end = msanMove.slice(2,4).trim();

@@ -10,6 +10,7 @@ function fenPGN(obj) {
 	var currentHistObj = {};
 	var moveMSAN = function(msanMove) {
 		totalmovestring += " " + msanMove; 
+        totalmovestring = totalmovestring.trim();
 		board = h.updateBoardMSAN(board,msanMove);
 		var histObj = {board:board,move:msanMove,totalmovestring:totalmovestring,moveNum:moveHistory.length,time:Date()};
 		moveHistory = h.addMSANMove(moveHistory,histObj);
@@ -19,6 +20,12 @@ function fenPGN(obj) {
 	self.getHistory = function() {
 		return moveHistory;
 	};
+    self.reset = function() {
+        totalmovestring = '';
+        moveHistory = [];
+        board = h.startboard;
+        return self;
+    };
 	self.showHistory = function() {
 		moveHistory.forEach(function(obj) {
 			console.log(obj);
@@ -37,6 +44,9 @@ function fenPGN(obj) {
 		this.moveMSAN(moveStr);
 		return self;
 	};
+    self.totalmovestring = function() {
+        return totalmovestring;
+    };
 	self.view = function() {
 		var copy = board.slice(0);
 		console.log("Move #" + currentHistObj.moveNum + " : "  + currentHistObj.move + " at " + currentHistObj.time);
