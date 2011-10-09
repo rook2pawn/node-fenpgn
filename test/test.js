@@ -13,7 +13,7 @@ newboard = h.updateBoardMSAN(newboard,'e3d2');
 newboard = h.updateBoardMSAN(newboard,'a2a3');
 newboard = h.updateBoardMSAN(newboard,'d2c1q');
 
-var hist = 
+var game = 
 fen()
 	.mm('g1f3')
 	.mm('d7d5')
@@ -30,8 +30,35 @@ fen()
 ;
 exports.testStateCheck = function(test) {
     test.expect(2);
-    test.deepEqual(newboard,hist.board());
-    test.deepEqual(newboard.slice(0).reverse(),hist.boardView());
+    test.deepEqual(newboard,game.board());
+    test.deepEqual(newboard.slice(0).reverse(),game.boardView());
     test.done();
 };
+exports.testActivePlayer = function(test) {
+    test.expect(3);
+    var tempGame = history = undefined;
+//move 1
+    tempGame = fen().mm('e2e4');
+    history = tempGame.getHistory();
+    test.equals('b',history.pop().activeplayer);
+//move 2
+    tempGame = tempGame.mm('e7e5');
+    history = tempGame.getHistory();
+    test.equals('w',history.pop().activeplayer);
+//move3
+    tempGame = tempGame.mm('g1f3');
+    history = tempGame.getHistory();
+    test.equals('b',history.pop().activeplayer);
 
+    test.done();
+};
+exports.testBoardToFenPos = function(test) {
+    var history = game.getHistory();
+    var firsthistory = history.shift();
+    var lasthistory = history.pop();
+    test.expect(3);
+    test.equals('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',game.boardToFenPos(h.startboard));
+    test.equals('rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R',game.boardToFenPos(firsthistory.board));
+   test.equals(game.boardToFenPos(newboard),game.boardToFenPos(lasthistory.board));
+    test.done();
+};

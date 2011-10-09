@@ -1,36 +1,47 @@
 var h = require('./help');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
-	var moveHistory = [];
-	var board = startboard = h.startboard;
+    if (obj === undefined) {
+        obj = {};
+    }
+	var history = obj.history || [];
+	var board = obj.board || h.startboard;
 	var moveSAN = function(san) {
-//		h.addSANMove(moveHistory,sanMove);
+//		h.addSANMove();
 	};
-	var totalmovestring = '';
-	var currentHistObj = {};
+	var totalmovestring = obj.totalmovestring || "";
+	var currentHistory = obj.currentHistory || {};
 	var moveMSAN = function(msanMove) {
-		totalmovestring += " " + msanMove; 
-        totalmovestring = totalmovestring.trim();
-		board = h.updateBoardMSAN(board,msanMove);
-		var histObj = {board:board,move:msanMove,totalmovestring:totalmovestring,moveNum:moveHistory.length,time:Date()};
-		moveHistory = h.addMSANMove(moveHistory,histObj);
-		currentHistObj = histObj;
+		obj.totalmovestring += " " + msanMove; 
+        obj.totalmovestring = obj.totalmovestring.trim();
+		obj.board = board = h.updateBoardMSAN(board,msanMove);
+        var fenpos = h.boardToFenPos(board);
+        var activeplayer = 'w';
+        if ((history.length % 2) === 0) { 
+           activeplayer = 'b'; 
+        }
+		var histObj = {board:obj.board,move:msanMove,totalmovestring:obj.totalmovestring,moveNum:history.length,time:Date(),activeplayer:activeplayer};
+		obj.history = h.addMSANMove(history,histObj);
+		obj.currentHistory = histObj;
 	};
 	var self = {};
 	self.getHistory = function() {
-		return moveHistory;
+		return history.slice();
 	};
     self.reset = function() {
-        totalmovestring = '';
-        moveHistory = [];
-        board = h.startboard;
+        totalmovestring = obj.totalmovestring = '';
+        history = obj.history = [];
+        board = obj.board = h.startboard;
         return self;
     };
 	self.showHistory = function() {
-		moveHistory.forEach(function(obj) {
+	    history.forEach(function(obj) {
 			console.log(obj);
 		});
 	};
+    self.boardToFenPos = function(board) {
+        return h.boardToFenPos(board);
+    };
 	self.moveSAN = function(moveStr) {
 		moveSAN(moveStr);
 	};
@@ -42,14 +53,14 @@ function fenPGN(obj) {
 	};
 	self.mm = function(moveStr) {
 		this.moveMSAN(moveStr);
-		return self;
+		return fenPGN(obj);
 	};
     self.totalmovestring = function() {
         return totalmovestring;
     };
 	self.view = function() {
 		var copy = board.slice(0);
-		console.log("Move #" + currentHistObj.moveNum + " : "  + currentHistObj.move + " at " + currentHistObj.time);
+		console.log("Move #" + currentHistory.moveNum + " : "  + currentHistory.move + " at " + currentHistory.time);
 		console.log(copy.reverse());
 		return self;
 	};

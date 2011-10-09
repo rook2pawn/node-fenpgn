@@ -18,7 +18,7 @@ exports.startboard = [['R','N','B','Q','K','B','N','R'],
 exports.boardToFenPos = function(board) {
 	var fenPos = '';
 	var boardcopy = board.slice();
-	board.reverse().forEach(function(row) {
+	boardcopy.reverse().forEach(function(row) {
 		fenPos += row.join('') + '/';
 	});
 	var rep = function(substring,index,original) {
