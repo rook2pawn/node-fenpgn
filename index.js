@@ -2,7 +2,10 @@ var h = require('./help');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
-        obj = {fullmovenum : 0};
+        obj = {
+            fullmovenum : 0,
+            totalmovestring = ""
+        };
     }
 	var history = obj.history || [];
 	var board = obj.board || h.startboard;
@@ -62,7 +65,7 @@ function fenPGN(obj) {
     };
 	self.view = function() {
 		var copy = board.slice(0);
-		console.log("Move #" + currentHistory.moveNum + " : "  + currentHistory.move + " at " + currentHistory.time);
+		console.log("Move #" + obj.currentHistory.moveNum + " : "  + obj.currentHistory.move + " at " + obj.currentHistory.time);
 		console.log(copy.reverse());
 		return self;
 	};
