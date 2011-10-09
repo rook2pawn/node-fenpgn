@@ -9,7 +9,6 @@ function fenPGN(obj) {
 	var moveSAN = function(san) {
 //		h.addSANMove();
 	};
-	var totalmovestring = obj.totalmovestring || "";
 	var currentHistory = obj.currentHistory || {};
 	var moveMSAN = function(msanMove) {
 		obj.totalmovestring += " " + msanMove; 
@@ -32,7 +31,7 @@ function fenPGN(obj) {
 		return history.slice();
 	};
     self.reset = function() {
-        totalmovestring = obj.totalmovestring = '';
+        obj.totalmovestring = '';
         history = obj.history = [];
         board = obj.board = h.startboard;
         return self;
@@ -59,7 +58,7 @@ function fenPGN(obj) {
 		return fenPGN(obj);
 	};
     self.totalmovestring = function() {
-        return totalmovestring;
+        return obj.totalmovestring;
     };
 	self.view = function() {
 		var copy = board.slice(0);
