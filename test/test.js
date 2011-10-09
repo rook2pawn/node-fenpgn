@@ -49,7 +49,6 @@ exports.testActivePlayer = function(test) {
     tempGame = tempGame.mm('g1f3');
     history = tempGame.getHistory();
     test.equals('b',history.pop().activeplayer);
-
     test.done();
 };
 exports.testBoardToFenPos = function(test) {
@@ -62,3 +61,19 @@ exports.testBoardToFenPos = function(test) {
    test.equals(game.boardToFenPos(newboard),game.boardToFenPos(lasthistory.board));
     test.done();
 };
+exports.testfullmovenum = function(test) {
+    test.expect(4);
+    var tempGame = fen().mm('e2e4');
+    var lasthist = tempGame.getHistory().pop();
+    test.equals(0,lasthist.fullmovenum);
+    tempGame = tempGame.mm('e7e5');
+    lasthist = tempGame.getHistory().pop();
+    test.equals(1,lasthist.fullmovenum);
+    tempGame = tempGame.mm('g1f3');
+    lasthist = tempGame.getHistory().pop();
+    test.equals(1,lasthist.fullmovenum);
+    tempGame = tempGame.mm('d6d5');
+    lasthist = tempGame.getHistory().pop();
+    test.equals(2,lasthist.fullmovenum);
+    test.done();
+}

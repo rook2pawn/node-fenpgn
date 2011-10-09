@@ -2,7 +2,7 @@ var h = require('./help');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
-        obj = {};
+        obj = {fullmovenum : 0};
     }
 	var history = obj.history || [];
 	var board = obj.board || h.startboard;
@@ -20,7 +20,10 @@ function fenPGN(obj) {
         if ((history.length % 2) === 0) { 
            activeplayer = 'b'; 
         }
-		var histObj = {board:obj.board,move:msanMove,totalmovestring:obj.totalmovestring,moveNum:history.length,time:Date(),activeplayer:activeplayer};
+        if (activeplayer == 'w') {
+            obj.fullmovenum++;
+        }
+		var histObj = {board:obj.board,move:msanMove,totalmovestring:obj.totalmovestring,moveNum:history.length,time:Date(),activeplayer:activeplayer,fullmovenum:obj.fullmovenum};
 		obj.history = h.addMSANMove(history,histObj);
 		obj.currentHistory = histObj;
 	};
