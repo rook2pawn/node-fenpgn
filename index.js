@@ -4,7 +4,7 @@ function fenPGN(obj) {
     if (obj === undefined) {
         obj = {
             fullmovenum : 0,
-            totalmovestring = ""
+            totalmovestring : ""
         };
     }
 	var history = obj.history || [];
