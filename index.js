@@ -33,6 +33,9 @@ function fenPGN(obj) {
 	self.getHistory = function() {
 		return history.slice();
 	};
+    self.getAvailableSquares = function(board,row,col) {
+        return h.getAvailableSquares(board,row,col);   
+    };
     self.reset = function() {
         obj.totalmovestring = '';
         history = obj.history = [];

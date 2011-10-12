@@ -88,6 +88,164 @@ exports.updateBoardMSAN = function(board,msanMove){
 	}
 	return _board;
 };
+// returns a list of moveable squares
+exports.getAvailableSquares = function(board,row,col) {
+    var _board = mlib.copy(board); // work on a copy 
+    var piece = board[row][col];
+    var squares = [];
+    var psquares = []; // potentialsquares
+    switch (piece) {
+        case 'P': 
+                    if (board[row-1][col] === '1') {
+                        psquares.push({row:row-1,col:col}); 
+                        if ((row === 6) && (board[row-2][col] === '1')) {
+                            psquares.push({row:row-2,col:col});
+                        }
+                    }
+                    if (board[row-1][col-1] !== '1') { 
+                        psquares.push({row:row-1,col:col-1});
+                    }
+                    if (board[row-1][col+1] !== '1') { 
+                        psquares.push({row:row-1,col:col+1});
+                    }
+                    psquares.forEach(function(pos) {
+                        if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) { 
+                            squares.push(pos);
+                        } 
+                    });
+                    break;
+        case 'p':   
+                    if (board[row+1][col] === '1') {
+                        psquares.push({row:row+1,col:col}); 
+                        if ((row === 1) && (board[row+2][col] === '1')) {
+                            psquares.push({row:row+2,col:col});
+                        }
+                    }
+                    if (board[row+1][col-1] !== '1') { 
+                        psquares.push({row:row+1,col:col-1});
+                    }
+                    if (board[row+1][col+1] !== '1') { 
+                        psquares.push({row:row+1,col:col+1});
+                    }
+                    psquares.forEach(function(pos) {
+                        if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) { 
+                            squares.push(pos);
+                        } 
+                    });
+                    break;
+        case 'N': 
+                    psquares.push({row:row-1,col:col-2});
+                    psquares.push({row:row+1,col:col-2});
+
+                    psquares.push({row:row-2,col:col-1});
+                    psquares.push({row:row+2,col:col-1});
+
+                    psquares.push({row:row-1,col:col+2});
+                    psquares.push({row:row+1,col:col+2});
+
+                    psquares.push({row:row-2,col:col+1});
+                    psquares.push({row:row+2,col:col+1});
+                    
+                    psquares.forEach(function(pos) {
+                        if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) {
+                            if ((board[pos.row][pos.col] === '1') || (board[pos.row][pos.col].toLowerCase() === board[pos.row][pos.col])) {
+                                squares.push(pos);
+                            }
+                        }
+                    });
+                    break;
+        case 'n': 
+                    psquares.push({row:row-1,col:col-2});
+                    psquares.push({row:row+1,col:col-2});
+
+                    psquares.push({row:row-2,col:col-1});
+                    psquares.push({row:row+2,col:col-1});
+
+                    psquares.push({row:row-1,col:col+2});
+                    psquares.push({row:row+1,col:col+2});
+
+                    psquares.push({row:row-2,col:col+1});
+                    psquares.push({row:row+2,col:col+1});
+                    
+                    psquares.forEach(function(pos) {
+                        if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) {
+                            if ((board[pos.row][pos.col] === '1') || (board[pos.row][pos.col].toUpperCase() === board[pos.row][pos.col])) {
+                                squares.push(pos);
+                            }
+                        }
+                    });
+                    break;
+        case 'R':   
+                    for (var i = row-1; i >= 0; i--) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var i = row+1; i <= 7; i++) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col-1; j >= 0; j--) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col+1; j <= 7; j++) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else {
+                            break;
+                        }
+                    }
+                    squares = psquares;
+                    break; 
+        case 'r':   
+                    for (var i = row-1; i >= 0; i--) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var i = row+1; i <= 7; i++) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col-1; j >= 0; j--) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col+1; j <= 7; j++) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else {
+                            break;
+                        }
+                    }
+                    squares = psquares;
+                    break;
+        case 'B':    
+                    break; 
+        default :   
+                    break;
+    }
+
+    // now delete any out of bound squares..
+    return squares;
+};
 exports.getFenFields = function(fenstring) {
 	if (fenstring === undefined) { fenstring = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";};
 	var fields = fenstring.split(' ');
