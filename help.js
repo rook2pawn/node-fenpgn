@@ -91,8 +91,10 @@ exports.updateBoardMSAN = function(board,msanMove){
 // returns a list of moveable squares
 exports.getAvailableSquares = function(board,row,col) {
     var isUpperCase = function(character) {
-        if (character.toUpperCase() === character) {
-            return true;
+        if (character !== undefined) {
+            if (character.toUpperCase() === character) {
+                return true;
+            }
         }
         return false;
     };
@@ -192,6 +194,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row-1; i >= 0; i--) {
                         if (board[i][col] === '1') {
                             psquares.push({row:i,col:col});
+                        } else if (!isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
                         } else {
                             break;
                         }
@@ -199,6 +204,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row+1; i <= 7; i++) {
                         if (board[i][col] === '1') {
                             psquares.push({row:i,col:col});
+                        } else if (!isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
                         } else {
                             break;
                         }
@@ -206,6 +214,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var j = col-1; j >= 0; j--) {
                         if (board[row][j] === '1') {
                             psquares.push({row:row,col:j});
+                        } else if (!isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
                         } else {
                             break;
                         }
@@ -213,6 +224,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var j = col+1; j <= 7; j++) {
                         if (board[row][j] === '1') {
                             psquares.push({row:row,col:j});
+                        } else if (!isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
                         } else {
                             break;
                         }
@@ -223,6 +237,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row-1; i >= 0; i--) {
                         if (board[i][col] === '1') {
                             psquares.push({row:i,col:col});
+                        } else if (isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
                         } else {
                             break;
                         }
@@ -230,6 +247,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row+1; i <= 7; i++) {
                         if (board[i][col] === '1') {
                             psquares.push({row:i,col:col});
+                        } else if (isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
                         } else {
                             break;
                         }
@@ -237,6 +257,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var j = col-1; j >= 0; j--) {
                         if (board[row][j] === '1') {
                             psquares.push({row:row,col:j});
+                        } else if (isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
                         } else {
                             break;
                         }
@@ -244,6 +267,9 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var j = col+1; j <= 7; j++) {
                         if (board[row][j] === '1') {
                             psquares.push({row:row,col:j});
+                        } else if (isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
                         } else {
                             break;
                         }
@@ -256,48 +282,58 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row-1; i >= 0; i--) {
                         index++; 
                         var j = col - index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // up and right
                     var index = 0;
                     for (var i = row-1; i >= 0; i--) {
                         index++; 
                         var j = col + index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // down and left
                     var index = 0;
                     for (var i = row+1; i <= 7; i++) {
                         index++; 
                         var j = col - index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // down and right
                     var index = 0;
                     for (var i = row+1; i <= 7; i++) {
                         index++; 
                         var j = col + index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     squares = psquares;
-                    console.log("SUARES: ");
-                    console.log(squares);
                     break; 
         case 'b':    
                     // up and left
@@ -305,33 +341,42 @@ exports.getAvailableSquares = function(board,row,col) {
                     for (var i = row-1; i >= 0; i--) {
                         index++; 
                         var j = col - index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // up and right
                     var index = 0;
                     for (var i = row-1; i >= 0; i--) {
                         index++; 
                         var j = col + index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // down and left
                     var index = 0;
                     for (var i = row+1; i <= 7; i++) {
                         index++; 
                         var j = col - index;
-                            if (board[i][j] === '1') {
-                                psquares.push({row:i,col:j});
-                            } else {
-                                break;
-                            }
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
                     };
                     // down and right
                     var index = 0;
@@ -340,18 +385,301 @@ exports.getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                             if (board[i][j] === '1') {
                                 psquares.push({row:i,col:j});
+                            } else if (isUpperCase(board[i][j])) { 
+                                psquares.push({row:i,col:j});
+                                break;
                             } else {
                                 break;
                             }
                     };
                     squares = psquares;
-                    console.log("SUARES: ");
-                    console.log(squares);
                     break; 
+        case 'Q': 
+                    for (var i = row-1; i >= 0; i--) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else if (!isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var i = row+1; i <= 7; i++) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else if (!isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col-1; j >= 0; j--) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else if (!isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col+1; j <= 7; j++) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else if (!isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    }
+                    // up and left
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col - index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // up and right
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col + index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // down and left
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col - index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // down and right
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col + index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (!isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    squares = psquares;
+                    break;
+        case 'q': 
+                    for (var i = row-1; i >= 0; i--) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else if (isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var i = row+1; i <= 7; i++) {
+                        if (board[i][col] === '1') {
+                            psquares.push({row:i,col:col});
+                        } else if (isUpperCase(board[i][col])) { 
+                            psquares.push({row:i,col:col});
+                            break;
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col-1; j >= 0; j--) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else if (isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                        } else {
+                            break;
+                        }
+                    } 
+                    for (var j = col+1; j <= 7; j++) {
+                        if (board[row][j] === '1') {
+                            psquares.push({row:row,col:j});
+                        } else if (isUpperCase(board[row][j])) { 
+                            psquares.push({row:row,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    }
+                    // up and left
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col - index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // up and right
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col + index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // down and left
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col - index;
+                        if (board[i][j] === '1') {
+                            psquares.push({row:i,col:j});
+                        } else if (isUpperCase(board[i][j])) { 
+                            psquares.push({row:i,col:j});
+                            break;
+                        } else {
+                            break;
+                        }
+                    };
+                    // down and right
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col + index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else if (isUpperCase(board[i][j])) { 
+                                psquares.push({row:i,col:j});
+                                break;
+                            } else {
+                                break;
+                            }
+                    };
+                    squares = psquares;
+                    break;
+        case 'K':
+                    if (row !== 0) {
+                        // top
+                        if (board[row-1][col] === '1') {
+                            psquares.push({row:row-1,col:col});
+                        } 
+                        // top left
+                        if (board[row-1][col-1] === '1') {
+                            psquares.push({row:row-1,col:col-1});
+                        } 
+                        // top right
+                        if (board[row-1][col+1] === '1') {
+                            psquares.push({row:row-1,col:col+1});
+                        }
+                    }   
+                    if (row !== 7) {  
+                        // bottom
+                        if (board[row+1][col] === '1') {
+                            psquares.push({row:row+1,col:col});
+                        } 
+                        // bottom left
+                        if (board[row+1][col-1] === '1') {
+                            psquares.push({row:row+1,col:col-1});
+                        } 
+                        // bottom right
+                        if (board[row+1][col+1] === '1') {
+                            psquares.push({row:row+1,col:col+1});
+                        } 
+                    }
+                    if (col !== 0) {
+                        // left
+                        if (board[row][col-1] === '1') {
+                            psquares.push({row:row,col:col-1});
+                        } 
+                    }
+                    if (col !== 7) {
+                        // right
+                        if (board[row][col+1] === '1') {
+                            psquares.push({row:row,col:col+1});
+                        }
+                    } 
+                    squares = psquares;
+                    break;
+        case 'k':
+                    if (row !== 0) {
+                        // top
+                        if (board[row-1][col] === '1') {
+                            psquares.push({row:row-1,col:col});
+                        } 
+                        // top left
+                        if (board[row-1][col-1] === '1') {
+                            psquares.push({row:row-1,col:col-1});
+                        } 
+                        // top right
+                        if (board[row-1][col+1] === '1') {
+                            psquares.push({row:row-1,col:col+1});
+                        }
+                    }   
+                    if (row !== 7) {  
+                        // bottom
+                        if (board[row+1][col] === '1') {
+                            psquares.push({row:row+1,col:col});
+                        } 
+                        // bottom left
+                        if (board[row+1][col-1] === '1') {
+                            psquares.push({row:row+1,col:col-1});
+                        } 
+                        // bottom right
+                        if (board[row+1][col+1] === '1') {
+                            psquares.push({row:row+1,col:col+1});
+                        } 
+                    }
+                    if (col !== 0) {
+                        // left
+                        if (board[row][col-1] === '1') {
+                            psquares.push({row:row,col:col-1});
+                        } 
+                    }
+                    if (col !== 7) {
+                        // right
+                        if (board[row][col+1] === '1') {
+                            psquares.push({row:row,col:col+1});
+                        }
+                    } 
+                    squares = psquares;
+                    break;
         default :   
                     break;
     }
-
     // now delete any out of bound squares..
     return squares;
 };
