@@ -7,6 +7,10 @@ function fenPGN(obj) {
             totalmovestring : ""
         };
     }
+    var whiteSeat = {};
+    whiteSeat.name = undefined;
+    var blackSeat = {};
+    blackSeat.name = undefined;
 	var history = obj.history || [];
 	var board = obj.board || h.startboard;
 	var moveSAN = function(san) {
@@ -77,6 +81,26 @@ function fenPGN(obj) {
     };
     self.boardView = function() { 
         return board.slice(0).reverse();
+    };
+    self.setWhiteSeat = function(obj) {
+        whiteSeat.name = obj.name;
+        return self;
+    };
+    self.setBlackSeat = function(obj){
+        blackSeat.name = obj.name;
+        return self;
+    };
+    self.getSeated = function() {
+        var seated = {};
+        if (blackSeat.name !== undefined) {
+            seated.blackSeat = {};
+            seated.blackSeat = blackSeat;
+        };
+        if (whiteSeat.name !== undefined) {
+            seated.whiteSeat = {};
+            seated.whiteSeat = whiteSeat;
+        };
+        return seated;
     };
 	return self;	
 }

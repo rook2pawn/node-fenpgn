@@ -90,7 +90,12 @@ exports.updateBoardMSAN = function(board,msanMove){
 };
 // returns a list of moveable squares
 exports.getAvailableSquares = function(board,row,col) {
-    var _board = mlib.copy(board); // work on a copy 
+    var isUpperCase = function(character) {
+        if (character.toUpperCase() === character) {
+            return true;
+        }
+        return false;
+    };
     var piece = board[row][col];
     var squares = [];
     var psquares = []; // potentialsquares
@@ -102,11 +107,15 @@ exports.getAvailableSquares = function(board,row,col) {
                             psquares.push({row:row-2,col:col});
                         }
                     }
-                    if (board[row-1][col-1] !== '1') { 
-                        psquares.push({row:row-1,col:col-1});
+                    if (board[row-1][col-1] !== undefined) { 
+                        if ((board[row-1][col-1] !== '1') && (!isUpperCase(board[row-1][col-1]))) {
+                            psquares.push({row:row-1,col:col-1});
+                        }
                     }
-                    if (board[row-1][col+1] !== '1') { 
-                        psquares.push({row:row-1,col:col+1});
+                    if (board[row-1][col+1] !== undefined) {
+                        if ((board[row-1][col+1] !== '1') && (!isUpperCase(board[row-1][col+1]))) { 
+                            psquares.push({row:row-1,col:col+1});
+                        }
                     }
                     psquares.forEach(function(pos) {
                         if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) { 
@@ -121,11 +130,15 @@ exports.getAvailableSquares = function(board,row,col) {
                             psquares.push({row:row+2,col:col});
                         }
                     }
-                    if (board[row+1][col-1] !== '1') { 
-                        psquares.push({row:row+1,col:col-1});
+                    if (board[row+1][col-1] !== undefined) {
+                        if ((board[row+1][col-1] !== '1') && (isUpperCase(board[row+1][col-1]))) { 
+                            psquares.push({row:row+1,col:col-1});
+                        }
                     }
-                    if (board[row+1][col+1] !== '1') { 
-                        psquares.push({row:row+1,col:col+1});
+                    if (board[row+1][col+1] !== undefined) {
+                        if ((board[row+1][col+1] !== '1') && (isUpperCase(board[row+1][col+1]))) {
+                            psquares.push({row:row+1,col:col+1});
+                        }
                     }
                     psquares.forEach(function(pos) {
                         if ((pos.row >= 0 && pos.row <= 7) && (pos.col >= 0 && pos.col <= 7)) { 
@@ -237,7 +250,103 @@ exports.getAvailableSquares = function(board,row,col) {
                     }
                     squares = psquares;
                     break;
-        case 'B':    
+        case 'B':   
+                    // up and left
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col - index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // up and right
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col + index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // down and left
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col - index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // down and right
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col + index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    squares = psquares;
+                    console.log("SUARES: ");
+                    console.log(squares);
+                    break; 
+        case 'b':    
+                    // up and left
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col - index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // up and right
+                    var index = 0;
+                    for (var i = row-1; i >= 0; i--) {
+                        index++; 
+                        var j = col + index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // down and left
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col - index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    // down and right
+                    var index = 0;
+                    for (var i = row+1; i <= 7; i++) {
+                        index++; 
+                        var j = col + index;
+                            if (board[i][j] === '1') {
+                                psquares.push({row:i,col:j});
+                            } else {
+                                break;
+                            }
+                    };
+                    squares = psquares;
+                    console.log("SUARES: ");
+                    console.log(squares);
                     break; 
         default :   
                     break;
