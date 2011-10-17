@@ -2,13 +2,18 @@
   "author": "David Wee <rook2pawn@gmail.com> (rook2pawn.com)",
   "name": "fenpgn",
   "description": "FEN and PGN Notation Chess in NodeJS",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/rook2pawn/node-fenpgn",
   "repository": {
     "type": "git",
     "url": "git://github.com/rook2pawn/node-fenpgn.git"
   },
   "main": "index.js",
-  "dependencies": {},
+  "directories" : {
+     "test" : " test"
+  },
+  "dependencies": {
+    "matrixlib" : ">=0.0.3"
+  },
   "devDependencies": {}
 }

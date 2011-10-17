@@ -58,7 +58,7 @@ exports.testBoardToFenPos = function(test) {
     test.expect(3);
     test.equals('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',game.boardToFenPos(h.startboard));
     test.equals('rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R',game.boardToFenPos(firsthistory.board));
-   test.equals(game.boardToFenPos(newboard),game.boardToFenPos(lasthistory.board));
+    test.equals(game.boardToFenPos(newboard),game.boardToFenPos(lasthistory.board));
     test.done();
 };
 exports.testfullmovenum = function(test) {

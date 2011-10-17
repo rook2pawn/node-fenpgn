@@ -40,6 +40,9 @@ function fenPGN(obj) {
     self.getAvailableSquares = function(board,row,col) {
         return h.getAvailableSquares(board,row,col);   
     };
+    self.piecesUnicode = function() {
+        return h.piecesUnicode;
+    };
     self.reset = function() {
         obj.totalmovestring = '';
         history = obj.history = [];
@@ -72,8 +75,7 @@ function fenPGN(obj) {
     };
 	self.view = function() {
 		var copy = board.slice(0);
-		console.log("Move #" + obj.currentHistory.moveNum + " : "  + obj.currentHistory.move + " at " + obj.currentHistory.time);
-		console.log(copy.reverse());
+        console.log(copy);
 		return self;
 	};
     self.board = function() { 
