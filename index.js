@@ -3,47 +3,47 @@ exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
         obj = {
-            fullmovenum : 0,
-            totalmovestring : ""
+            history:[{whiteSeat:{name:undefined},blackSeat:{name:undefined},board:h.startboard,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0}]
         };
     }
-    var whiteSeat = {};
-    whiteSeat.name = undefined;
-    var blackSeat = {};
-    blackSeat.name = undefined;
-    var activeplayer = 'w';
-	var history = obj.history || [];
-	var board = obj.board || h.startboard;
-	var moveSAN = function(san) {
-//		h.addSANMove();
-	};
-	var currentHistory = obj.currentHistory || {};
+    var props = {};
+    var last = obj.history[obj.history.length - 1];
+    for (var name in last) {
+        if (last.hasOwnProperty(name)) {
+            props[name] = last[name];
+        }
+    }
 	var moveMSAN = function(msanMove) {
-		obj.totalmovestring += " " + msanMove; 
-        obj.totalmovestring = obj.totalmovestring.trim();
-		obj.board = board = h.updateBoardMSAN(board,msanMove);
-        var fenpos = h.boardToFenPos(board);
-        if ((history.length % 2) === 0) { 
-           activeplayer = 'b'; 
+        props.moveNum++;
+        props.move = msanMove;
+		props.totalmovestring += " " + msanMove; 
+        props.totalmovestring = props.totalmovestring.trim();
+		props.board = h.updateBoardMSAN(props.board,msanMove);
+        if ((obj.history.length % 2) === 1) { 
+            props.activeplayer = 'b';
+        } else {
+            props.activeplayer = 'w';
         }
-        if (activeplayer == 'w') {
-            obj.fullmovenum++;
+        if (props.activeplayer == 'w') {
+            props.fullmovenum++;
         }
-		var histObj = {board:obj.board,move:msanMove,totalmovestring:obj.totalmovestring,moveNum:history.length,time:Date(),activeplayer:activeplayer,fullmovenum:obj.fullmovenum};
-		obj.history = h.addMSANMove(history,histObj);
-		obj.currentHistory = histObj;
+		var histObj = {board:props.board,move:msanMove,totalmovestring:props.totalmovestring,moveNum:obj.history.length,time:Date(),activeplayer:props.activeplayer,fullmovenum:props.fullmovenum};
+		obj.history = h.addMSANMove(obj.history,histObj);
 	};
 	var self = {};
+    self.getProps = function() {
+        return props;
+    }
     self.getActivePlayer = function() {
-        if (activeplayer == 'w') {
+        if (props.activeplayer == 'w') {
             return 'white';
         } 
-        if (activeplayer == 'b') {
+        if (props.activeplayer == 'b') {
             return 'black';
         }
     };
 	self.getHistory = function() {
-		return history.slice();
+		return obj.history.slice();
 	};
     self.getAvailableSquares = function(board,row,col) {
         return h.getAvailableSquares(board,row,col);   
@@ -52,13 +52,15 @@ function fenPGN(obj) {
         return h.piecesUnicode;
     };
     self.reset = function() {
-        obj.totalmovestring = '';
-        history = obj.history = [];
-        board = obj.board = h.startboard;
+        for (var name in obj) {
+            delete obj[name];
+        };
+        obj.history = [];
+        obj.history.push({board:board,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0});
         return self;
     };
 	self.showHistory = function() {
-	    history.forEach(function(obj) {
+	    obj.history.forEach(function(obj) {
 			console.log(obj);
 		});
 	};
@@ -76,44 +78,39 @@ function fenPGN(obj) {
 	};
 	self.mm = function(moveStr) {
 		this.moveMSAN(moveStr);
-		return fenPGN(obj);
+        return self;
 	};
     self.totalmovestring = function() {
-        return obj.totalmovestring;
+        return props.totalmovestring;
     };
 	self.view = function() {
-		var copy = board.slice(0);
-        console.log(copy);
+		var copy = props.board.slice(0);
+        console.log(copy.reverse());
 		return self;
 	};
     self.board = function() { 
-        return board;
+        return props.board;
     };
     self.boardView = function() { 
-        return board.slice(0).reverse();
+        return props.board.slice(0).reverse();
     };
     self.setWhiteSeat = function(obj) {
-        whiteSeat.name = obj.name;
+        props.whiteSeat.name = obj.name;
         return self;
     };
     self.setBlackSeat = function(obj){
-        blackSeat.name = obj.name;
+        props.blackSeat.name = obj.name;
         return self;
     };
     self.getSeated = function() {
         var seated = {};
-        if (blackSeat.name !== undefined) {
-            seated.blackSeat = {};
+        if (props.blackSeat.name !== undefined) {
             seated.blackSeat = blackSeat;
         };
-        if (whiteSeat.name !== undefined) {
-            seated.whiteSeat = {};
+        if (props.whiteSeat.name !== undefined) {
             seated.whiteSeat = whiteSeat;
         };
         return seated;
     };
 	return self;	
-}
-fenPGN.view = function (gamestr) {
-	return fenPGN(gamestr).view();
-}
+};
