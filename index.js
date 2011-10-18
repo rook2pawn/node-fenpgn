@@ -105,10 +105,10 @@ function fenPGN(obj) {
     self.getSeated = function() {
         var seated = {};
         if (props.blackSeat.name !== undefined) {
-            seated.blackSeat = blackSeat;
+            seated.blackSeat = props.blackSeat;
         };
         if (props.whiteSeat.name !== undefined) {
-            seated.whiteSeat = whiteSeat;
+            seated.whiteSeat = props.whiteSeat;
         };
         return seated;
     };
