@@ -11,6 +11,7 @@ function fenPGN(obj) {
     whiteSeat.name = undefined;
     var blackSeat = {};
     blackSeat.name = undefined;
+    var activeplayer = 'w';
 	var history = obj.history || [];
 	var board = obj.board || h.startboard;
 	var moveSAN = function(san) {
@@ -22,7 +23,6 @@ function fenPGN(obj) {
         obj.totalmovestring = obj.totalmovestring.trim();
 		obj.board = board = h.updateBoardMSAN(board,msanMove);
         var fenpos = h.boardToFenPos(board);
-        var activeplayer = 'w';
         if ((history.length % 2) === 0) { 
            activeplayer = 'b'; 
         }
@@ -34,6 +34,14 @@ function fenPGN(obj) {
 		obj.currentHistory = histObj;
 	};
 	var self = {};
+    self.getActivePlayer = function() {
+        if (activeplayer == 'w') {
+            return 'white';
+        } 
+        if (activeplayer == 'b') {
+            return 'black';
+        }
+    };
 	self.getHistory = function() {
 		return history.slice();
 	};
