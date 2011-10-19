@@ -31,6 +31,9 @@ function fenPGN(obj) {
 		obj.history = h.addMSANMove(obj.history,histObj);
 	};
 	var self = {};
+    self.getStartPieceInfo = function(board,msanMove) {
+        return h.getStartPieceInfo(board,msanMove);
+    };
     self.getProps = function() {
         return props;
     }

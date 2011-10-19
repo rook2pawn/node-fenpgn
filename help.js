@@ -61,6 +61,20 @@ exports.fenPosToBoard = function(fenPos) {
 	var board = lines.map(function(val) { val = val.replace(/\d+/g, rep); return val.split('')});
 	return board;
 };
+exports.getStartPieceInfo = function(board,msanMove) {
+    msanMove = msanMove.toString();
+	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
+	var start = msanMove.slice(0,2).trim(); var end = msanMove.slice(2,4).trim();
+	var startrow = start.slice(1,2); var endrow = end.slice(1,2);
+	var startcol = colHash[start.slice(0,1)]; var endcol = colHash[end.slice(0,1)];
+	var startpiece = board[startrow-1][startcol-1];
+    var color = undefined;
+    if (isUpperCase(startpiece)) 
+        color = 'white';
+    else 
+        color = 'black'; 
+    return {startpiece:startpiece,color:color}
+};
 // minimally we have to check for enpassant, but not castling rights.
 // if the e1g1 move is issued, we assume we had already done move validation
 // and we go ahead and resolve the castle. we also have to check for promotion.
