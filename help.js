@@ -73,7 +73,7 @@ exports.getStartPieceInfo = function(board,msanMove) {
         color = 'white';
     else 
         color = 'black'; 
-    return {startpiece:startpiece,color:color}
+    return {startpiece:startpiece,color:color,startRow:startrow,startCol:startcol,endRow:endrow,endCol:endcol}
 };
 // minimally we have to check for enpassant, but not castling rights.
 // if the e1g1 move is issued, we assume we had already done move validation
@@ -485,7 +485,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -499,7 +499,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -513,7 +513,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -527,7 +527,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -583,7 +583,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -597,7 +597,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined))  { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -611,7 +611,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -625,7 +625,7 @@ var getThreatenSquares = function(board,row,col) {
                         var j = col + index;
                             if (board[i][j] === '1') {
                                 psquares.push({row:i,col:j});
-                            } else if (!isUpperCase(board[i][j])) { 
+                            } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                                 psquares.push({row:i,col:j});
                                 break;
                             } else {
@@ -1111,7 +1111,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1125,7 +1125,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1139,7 +1139,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1153,7 +1153,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1209,7 +1209,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1223,7 +1223,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined))  { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1237,7 +1237,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1251,7 +1251,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                             if (board[i][j] === '1') {
                                 psquares.push({row:i,col:j});
-                            } else if (!isUpperCase(board[i][j])) { 
+                            } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                                 psquares.push({row:i,col:j});
                                 break;
                             } else {
