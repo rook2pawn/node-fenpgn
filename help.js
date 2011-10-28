@@ -1387,8 +1387,36 @@ var getAvailableSquares = function(board,row,col) {
         default :   
                     break;
     }
-    // now delete any out of bound squares..
+    // to do: now delete any out of bound squares
+    // if any are left over
     return {availableSquares:squares, threatenedSquares:threatenedSquares};
+};
+// isCheckMove(board, msanMove)
+exports.isCheckMove = function(board,msanMove) {
+	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
+    var end = msanMove.slice(2,4).trim();
+	var endrow = end.slice(1,2);
+	var endcol = colHash[end.slice(0,1)];
+	var piece = board[endrow-1][endcol-1];
+    var color = undefined;
+    if (isUpperCase(piece)) 
+        color = 'white';
+    else 
+        color = 'black'; 
+    var results = getAvailableSquares(board,endrow-1,endcol-1); 
+    var squares = results.availableSquares;
+    var isCheck = false;
+    for (var i = 0; i < squares.length; i++) {
+        var row = squares[i].row;
+        var col = squares[i].col;
+        if ((board[row][col] == 'K') && (color == 'black')) {
+            isCheck = true; 
+        }
+        if ((board[row][col] == 'k') && (color == 'white')) {
+            isCheck = true; 
+        }
+    }
+    return isCheck;
 };
 exports.getAvailableSquares = getAvailableSquares;
 exports.getFenFields = function(fenstring) {

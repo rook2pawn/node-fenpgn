@@ -3,7 +3,7 @@ exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
         obj = {
-            history:[{whiteSeat:{name:undefined},blackSeat:{name:undefined},board:h.startboard,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0}]
+            history:[{whiteSeat:{name:undefined},blackSeat:{name:undefined},board:h.startboard,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0,isCheckMove:false}]
         };
     }
     var props = {};
@@ -19,6 +19,7 @@ function fenPGN(obj) {
 		props.totalmovestring += " " + msanMove; 
         props.totalmovestring = props.totalmovestring.trim();
 		props.board = h.updateBoardMSAN(props.board,msanMove);
+        props.isCheckMove = h.isCheckMove(props.board,props.move);
         if ((obj.history.length % 2) === 1) { 
             props.activeplayer = 'b';
         } else {
@@ -27,7 +28,7 @@ function fenPGN(obj) {
         if (props.activeplayer == 'w') {
             props.fullmovenum++;
         }
-		var histObj = {board:props.board,move:msanMove,totalmovestring:props.totalmovestring,moveNum:obj.history.length,time:Date(),activeplayer:props.activeplayer,fullmovenum:props.fullmovenum};
+		var histObj = {board:props.board,move:msanMove,totalmovestring:props.totalmovestring,moveNum:obj.history.length,time:Date(),activeplayer:props.activeplayer,fullmovenum:props.fullmovenum,isCheckMove:props.isCheckMove};
 		obj.history = h.addMSANMove(obj.history,histObj);
 	};
 	var self = {};
@@ -48,6 +49,11 @@ function fenPGN(obj) {
 	self.getHistory = function() {
 		return obj.history.slice();
 	};
+    self.getLastHistory = function() {
+        if (obj.history.length > 0) {
+            return obj.history[obj.history.length - 1];
+        }
+    };
     self.getAvailableSquares = function(board,row,col) {
         return h.getAvailableSquares(board,row,col);   
     };
@@ -59,7 +65,7 @@ function fenPGN(obj) {
             delete obj[name];
         };
         obj.history = [];
-        obj.history.push({board:board,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0});
+        obj.history.push({board:board,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0,isCheckMove:false});
         return self;
     };
 	self.showHistory = function() {
