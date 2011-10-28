@@ -953,7 +953,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)) { 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -967,7 +967,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -981,7 +981,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -995,7 +995,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (isUpperCase(board[i][j])) { 
+                        } else if ((isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1012,7 +1012,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1026,7 +1026,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1040,7 +1040,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col - index;
                         if (board[i][j] === '1') {
                             psquares.push({row:i,col:j});
-                        } else if (!isUpperCase(board[i][j])) { 
+                        } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                             psquares.push({row:i,col:j});
                             break;
                         } else {
@@ -1054,7 +1054,7 @@ var getAvailableSquares = function(board,row,col) {
                         var j = col + index;
                             if (board[i][j] === '1') {
                                 psquares.push({row:i,col:j});
-                            } else if (!isUpperCase(board[i][j])) { 
+                            } else if ((!isUpperCase(board[i][j])) && (board[i][j] !== undefined)){ 
                                 psquares.push({row:i,col:j});
                                 break;
                             } else {
