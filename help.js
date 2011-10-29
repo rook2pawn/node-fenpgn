@@ -78,7 +78,7 @@ exports.getStartPieceInfo = function(board,msanMove) {
 // minimally we have to check for enpassant, but not castling rights.
 // if the e1g1 move is issued, we assume we had already done move validation
 // and we go ahead and resolve the castle. we also have to check for promotion.
-exports.updateBoardMSAN = function(board,msanMove){
+var updateBoardMSAN = function(board,msanMove) {
     msanMove = msanMove.toString();
 	var _board = mlib.copy(board); // work on a copy 
 	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
@@ -119,6 +119,7 @@ exports.updateBoardMSAN = function(board,msanMove){
 	}
 	return _board;
 };
+exports.updateBoardMSAN = updateBoardMSAN;
 var isIn = function(list,pos) {
     var match = false;
     if (list !== undefined) { 
@@ -137,6 +138,15 @@ var isUpperCase = function(character) {
         }
     }
     return false;
+};
+var colorOf = function(piece) {
+    if (isUpperCase(piece)) {
+        return 'white';
+    }
+    if (piece !== '1') {
+        return 'black';
+    }
+    return undefined;
 };
 // example
 // threatenedBy(board,{row:3,col:5},'black') 
@@ -1418,6 +1428,125 @@ exports.isCheckMove = function(board,msanMove) {
     }
     return isCheck;
 };
+// given a board, checks status of king-in-check status
+// for all sides.
+exports.isKingChecked = function(board) {
+    var results = {};
+    results.whiteChecked = false;
+    results.blackChecked = false;
+    for (var row = 0; row <= 7; row++) {
+        for (var col = 0; col <= 7; col++) {
+            if (board[row][col] == 'K') {
+                var squares = threatenedBy(board,{row:row,col:col},'black');
+                if (squares.length > 0) {
+                    results.whiteChecked = true;
+                    results.whiteThreatenedBy = squares;
+                }
+            }
+            if (board[row][col] == 'k') {
+                var squares = threatenedBy(board,{row:row,col:col},'white');
+                if (squares.length > 0) {
+                    results.blackChecked = true;
+                    results.blackThreatenedBy = squares;
+                }
+            }
+        }
+    }
+    return results;
+};
+// given a board, checks status of king-in-check status
+// for a specific color
+var isKingCheckedColor = function(board,color) {
+    var pos = undefined;
+    if (color == 'white') {
+        pos = positionOf('K',board);
+        var squares = threatenedBy(board,pos,'black');
+        if (squares.length > 0) {
+            return true;
+        }
+    } else {
+        pos = positionOf('k',board);
+        var squares = threatenedBy(board,pos,'white');
+        if (squares.length > 0) {
+            return true;
+        }
+    }
+    return false;
+};
+// positionOf useful for only K, Q.
+var positionOf = function(piece,board) {
+    for (var row =0; row <= 7; row++) {
+        for (var col = 0; col <= 7; col++) {
+            if (board[row][col] == piece) {
+                return {row:row,col:col}
+            } 
+        }
+    }
+    return undefined;
+};
+var getAllPieces = function(board,color) {
+    var list = [];
+    for (var row =0; row <= 7; row++) {
+        for (var col = 0; col <= 7; col++) {
+            if (colorOf(board[row][col]) == color) {
+                list.push({row:row,col:col,piece:board[row][col]});
+            } 
+        }
+    }
+    return list;
+};
+var generateMove = function(fromPos,toPos) {
+	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
+    var colList = ['foo','a','b','c','d','e','f','g','h'];
+    var fromRow = fromPos.row + 1;
+    var fromCol = fromPos.col + 1;
+    var toRow = toPos.row + 1;
+    var toCol = toPos.col + 1;
+    var move = "";
+    move = move.concat(colList[fromCol]).concat(fromRow);
+    move = move.concat(colList[toCol]).concat(toRow);
+    return move;
+}
+// isKingMated (board,color)  
+// isKingMated(board,'black') checks if black's king is mated.
+exports.isKingMated = function(board,color) {
+    var results = {};
+    results.whiteMated = false;
+    results.blackMated = false;
+    var pos = undefined;
+    if (color == 'white') {
+        pos = positionOf('K',board);
+    } else if (color == 'black') {
+        pos = positionOf('k',board);
+    }
+    if (pos !== undefined) {
+        var list = getAllPieces(board,color);
+        for (var i = 0; i < list.length; i++) {
+            var row = list[i].row;
+            var col = list[i].col; 
+            var piece = list[i].piece;
+            var results = getAvailableSquares(board,row,col);
+            var squares = results.availableSquares;
+            for (var j = 0; j < squares.length; j++) {
+                var newRow = squares[j].row; var newCol = squares[j].col;
+                var fromPos = {row:row,col:col};
+                var toPos = {row:newRow, col:newCol};
+                var move = generateMove(fromPos,toPos);
+                var testboard = updateBoardMSAN(board,move);
+                var isCheckedColor = isKingCheckedColor(testboard,color);
+                if (isCheckedColor === false) {
+                    // this means there exists at least one saving move.
+                    return false;
+                }
+            } 
+        }
+        return true;
+    }
+    return undefined;
+};
+// threatenedBy(board,{row:3,col:5},'black') 
+// returns a list of black positions (pieces that are black)
+// that threaten that square.
 exports.getAvailableSquares = getAvailableSquares;
 exports.getFenFields = function(fenstring) {
 	if (fenstring === undefined) { fenstring = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";};

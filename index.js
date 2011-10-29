@@ -32,6 +32,15 @@ function fenPGN(obj) {
 		obj.history = h.addMSANMove(obj.history,histObj);
 	};
 	var self = {};
+    self.isKingMated = function(params) {
+        var board = params.board || props.board;
+        var color = params.color;
+        return h.isKingMated(board,color);
+    }
+    self.isKingCheckedOnMove = function(board,move) {
+        var myboard = h.updateBoardMSAN(board,move);
+        return h.isKingChecked(myboard);
+    }
     self.getStartPieceInfo = function(board,msanMove) {
         return h.getStartPieceInfo(board,msanMove);
     };
@@ -73,6 +82,10 @@ function fenPGN(obj) {
 			console.log(obj);
 		});
 	};
+    self.takeBack = function() {
+        obj.history.pop();
+        return self;
+    };
     self.boardToFenPos = function(board) {
         return h.boardToFenPos(board);
     };
