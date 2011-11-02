@@ -1,4 +1,5 @@
 var h = require('./help');
+var mlib = require('matrixlib');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
@@ -33,14 +34,15 @@ function fenPGN(obj) {
 	};
 	var self = {};
     self.isKingMated = function(params) {
-        var board = params.board || props.board;
+        var board = mlib.copy(params.board || props.board);
         var color = params.color;
         return h.isKingMated(board,color);
-    }
+    };
     self.isKingCheckedOnMove = function(board,move) {
-        var myboard = h.updateBoardMSAN(board,move);
+        var copy = mlib.copy(board);
+        var myboard = h.updateBoardMSAN(copy,move);
         return h.isKingChecked(myboard);
-    }
+    };
     self.getStartPieceInfo = function(board,msanMove) {
         return h.getStartPieceInfo(board,msanMove);
     };

@@ -87,6 +87,7 @@ var updateBoardMSAN = function(board,msanMove) {
 	var startcol = colHash[start.slice(0,1)]; var endcol = colHash[end.slice(0,1)];
 	var startpiece = _board[startrow-1][startcol-1];
 	var endpiece = _board[endrow-1][endcol-1];
+    console.log("for msanMove " + msanMove + " startRow = " + startrow + " startCol = " + startcol + " endRow " + endrow + " endCol " + endcol + " startpiece " + startpiece);
 	_board[startrow-1][startcol-1] = '1';
 	_board[endrow-1][endcol-1] = startpiece;
 	// check for enpassant capture. if so, make the correction.
@@ -1510,29 +1511,30 @@ var generateMove = function(fromPos,toPos) {
 // isKingMated (board,color)  
 // isKingMated(board,'black') checks if black's king is mated.
 exports.isKingMated = function(board,color) {
+    var copy = mlib.copy(board);
     var results = {};
     results.whiteMated = false;
     results.blackMated = false;
     var pos = undefined;
     if (color == 'white') {
-        pos = positionOf('K',board);
+        pos = positionOf('K',copy);
     } else if (color == 'black') {
-        pos = positionOf('k',board);
+        pos = positionOf('k',copy);
     }
     if (pos !== undefined) {
-        var list = getAllPieces(board,color);
+        var list = getAllPieces(copy,color);
         for (var i = 0; i < list.length; i++) {
             var row = list[i].row;
             var col = list[i].col; 
             var piece = list[i].piece;
-            var results = getAvailableSquares(board,row,col);
+            var results = getAvailableSquares(copy,row,col);
             var squares = results.availableSquares;
             for (var j = 0; j < squares.length; j++) {
                 var newRow = squares[j].row; var newCol = squares[j].col;
                 var fromPos = {row:row,col:col};
                 var toPos = {row:newRow, col:newCol};
                 var move = generateMove(fromPos,toPos);
-                var testboard = updateBoardMSAN(board,move);
+                var testboard = updateBoardMSAN(copy,move);
                 var isCheckedColor = isKingCheckedColor(testboard,color);
                 if (isCheckedColor === false) {
                     // this means there exists at least one saving move.
