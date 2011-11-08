@@ -783,6 +783,9 @@ var getAvailableSquares = function(board,row,col) {
     var psquares = []; // potentialsquares
     switch (piece) {
         case 'p': 
+                    if (row-1 < 0) {
+                        break;
+                    }
                     if (board[row-1][col] === '1') {
                         psquares.push({row:row-1,col:col}); 
                         if ((row === 6) && (board[row-2][col] === '1')) {
@@ -806,6 +809,9 @@ var getAvailableSquares = function(board,row,col) {
                     });
                     break;
         case 'P':   
+                    if (row+1 > 7) {
+                        break;
+                    }
                     if (board[row+1][col] === '1') {
                         psquares.push({row:row+1,col:col}); 
                         if ((row === 1) && (board[row+2][col] === '1')) {
