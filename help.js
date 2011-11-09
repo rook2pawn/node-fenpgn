@@ -1425,25 +1425,12 @@ exports.isCheckMove = function(board,msanMove) {
 	var endrow = end.slice(1,2);
 	var endcol = colHash[end.slice(0,1)];
 	var piece = board[endrow-1][endcol-1];
-    var color = undefined;
+    var enemycolor = undefined;
     if (isUpperCase(piece)) 
-        color = 'white';
+        enemycolor = 'black';
     else 
-        color = 'black'; 
-    var results = getAvailableSquares(board,endrow-1,endcol-1); 
-    var squares = results.availableSquares;
-    var isCheck = false;
-    for (var i = 0; i < squares.length; i++) {
-        var row = squares[i].row;
-        var col = squares[i].col;
-        if ((board[row][col] == 'K') && (color == 'black')) {
-            isCheck = true; 
-        }
-        if ((board[row][col] == 'k') && (color == 'white')) {
-            isCheck = true; 
-        }
-    }
-    return isCheck;
+        enemycolor = 'white'; 
+    return isKingCheckedColor(board,enemycolor);
 };
 // given a board, checks status of king-in-check status
 // for all sides.
