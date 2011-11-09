@@ -773,6 +773,12 @@ var getThreatenSquares = function(board,row,col) {
 // returns a list of moveable squares
 var getAvailableSquares = function(board,row,col) {
     var piece = board[row][col];
+    var color = undefined;
+    if (isUpperCase(piece)) {
+        color = 'white';
+    } else {
+        color = 'black';
+    }
     var squares = [];
     var threatenedSquares = [];
     var psquares = []; // potentialsquares
@@ -1399,9 +1405,18 @@ var getAvailableSquares = function(board,row,col) {
         default :   
                     break;
     }
-    // to do: now delete any out of bound squares
-    // if any are left over
-    return {availableSquares:squares, threatenedSquares:threatenedSquares};
+    var passedSquares = [];
+    squares.forEach(function(pos) {
+        if ((pos.row >= 0) && (pos.row <= 7) && (pos.col >= 0) && (pos.col <=7)) {
+            if ((color == 'white') && (!isUpperCase(board[pos.row][pos.col]))) {
+                passedSquares.push(pos);
+            };
+            if ((color == 'black') && (isUpperCase(board[pos.row][pos.col]) || (board[pos.row][pos.col] == '1'))) {
+                passedSquares.push(pos);
+            };
+        }
+    });
+    return {availableSquares:passedSquares, threatenedSquares:threatenedSquares};
 };
 // isCheckMove(board, msanMove)
 exports.isCheckMove = function(board,msanMove) {
