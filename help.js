@@ -3,10 +3,6 @@ var mlib = require('matrixlib');
 exports.processMSANHistory = function(msanHistory) {
 	
 };
-exports.addMSANMove = function(moveHistory,msanMove) {
-	moveHistory.push(msanMove);
-	return moveHistory;
-};
 exports.piecesUnicode = {
     K: '♔', // U+2654
     Q: '♕', // U+2655
@@ -87,7 +83,6 @@ var updateBoardMSAN = function(board,msanMove) {
 	var startcol = colHash[start.slice(0,1)]; var endcol = colHash[end.slice(0,1)];
 	var startpiece = _board[startrow-1][startcol-1];
 	var endpiece = _board[endrow-1][endcol-1];
-    console.log("for msanMove " + msanMove + " startRow = " + startrow + " startCol = " + startcol + " endRow " + endrow + " endCol " + endcol + " startpiece " + startpiece);
 	_board[startrow-1][startcol-1] = '1';
 	_board[endrow-1][endcol-1] = startpiece;
 	// check for enpassant capture. if so, make the correction.
@@ -101,7 +96,7 @@ var updateBoardMSAN = function(board,msanMove) {
 		}
 	}
 	// its a castle
-	if ((startpiece.toLowerCase() == 'k') && (Math.abs(endcol,startcol) > 1)) {
+	if ((startpiece.toLowerCase() == 'k') && (Math.abs(endcol-startcol) > 1)) {
 		if (endcol == 7) { // kingside castle
 			_board[endrow-1][5] = _board[endrow-1][7];
 			_board[endrow-1][7] = '1';
@@ -1517,30 +1512,34 @@ var generateMove = function(fromPos,toPos) {
 // isKingMated (board,color)  
 // isKingMated(board,'black') checks if black's king is mated.
 exports.isKingMated = function(board,color) {
-    var copy = mlib.copy(board);
+//    var copy = mlib.copy(board);
     var results = {};
     results.whiteMated = false;
     results.blackMated = false;
     var pos = undefined;
     if (color == 'white') {
-        pos = positionOf('K',copy);
+        //pos = positionOf('K',copy);
+        pos = positionOf('K',board);
     } else if (color == 'black') {
-        pos = positionOf('k',copy);
+        //pos = positionOf('k',copy);
+        pos = positionOf('k',board);
     }
     if (pos !== undefined) {
-        var list = getAllPieces(copy,color);
+        //var list = getAllPieces(copy,color);
+        var list = getAllPieces(board,color);
         for (var i = 0; i < list.length; i++) {
             var row = list[i].row;
             var col = list[i].col; 
             var piece = list[i].piece;
-            var results = getAvailableSquares(copy,row,col);
+            //var results = getAvailableSquares(copy,row,col);
+            var results = getAvailableSquares(board,row,col);
             var squares = results.availableSquares;
             for (var j = 0; j < squares.length; j++) {
                 var newRow = squares[j].row; var newCol = squares[j].col;
                 var fromPos = {row:row,col:col};
                 var toPos = {row:newRow, col:newCol};
                 var move = generateMove(fromPos,toPos);
-                var testboard = updateBoardMSAN(copy,move);
+                var testboard = updateBoardMSAN(board,move);
                 var isCheckedColor = isKingCheckedColor(testboard,color);
                 if (isCheckedColor === false) {
                     // this means there exists at least one saving move.

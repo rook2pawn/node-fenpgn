@@ -14,8 +14,8 @@ exports.testStateCheck = function(test) {
     newboard = h.updateBoardMSAN(newboard,'a2a3');
     newboard = h.updateBoardMSAN(newboard,'d2c1q');
 
-    var game = 
-    fen()
+    var game = new fen();
+    game 
         .mm('g1f3')
         .mm('d7d5')
         .mm('f3g5')
@@ -29,17 +29,18 @@ exports.testStateCheck = function(test) {
         .mm('a2a3')
         .mm('d2c1q')
     ;
-    test.expect(2);
+    test.expect(3);
     test.deepEqual(newboard,game.board());
     test.deepEqual(newboard.slice(0).reverse(),game.boardView());
+    test.deepEqual(newboard,game.board());
     test.done();
 };
-
 exports.testActivePlayerAsPropertyOfHistory = function(test) {
     test.expect(3);
+    var game = new fen();
     var tempGame = history = undefined;
 //move 1
-    tempGame = fen().mm('e2e4');
+    tempGame = game.mm('e2e4');
     history = tempGame.getHistory();
     test.equals('b',history.pop().activeplayer);
 //move 2
@@ -54,7 +55,8 @@ exports.testActivePlayerAsPropertyOfHistory = function(test) {
 };
 exports.testfullmovenum = function(test) {
     test.expect(4);
-    var tempGame = fen().mm('e2e4');
+    var game = new fen();
+    var tempGame = game.mm('e2e4');
     var lasthist = tempGame.getHistory().pop();
     test.equals(0,lasthist.fullmovenum);
     tempGame = tempGame.mm('e7e5');
@@ -68,11 +70,10 @@ exports.testfullmovenum = function(test) {
     test.equals(2,lasthist.fullmovenum);
     test.done();
 };
-
 exports.testGetActivePlayer = function(test) {
     test.expect(4);
     var active = undefined;
-    var game = fen();
+    var game = new fen();
     active = game.getActivePlayer();
     test.equals('white',active);
     game.mm('e2e4');
@@ -99,8 +100,8 @@ exports.testBoardToFenPos = function(test) {
     newboard = h.updateBoardMSAN(newboard,'e3d2');
     newboard = h.updateBoardMSAN(newboard,'a2a3');
     newboard = h.updateBoardMSAN(newboard,'d2c1q');
-    var game = 
-    fen()
+    var game = new fen();
+    game 
         .mm('g1f3')
         .mm('d7d5')
         .mm('f3g5')
@@ -114,20 +115,21 @@ exports.testBoardToFenPos = function(test) {
         .mm('a2a3')
         .mm('d2c1q')
     ;
+    var game2 = new fen();
     var history = game.getHistory();
     history.shift(); // slide off the startposition
     var firsthistory = history.shift();// first history where there is a move
     var lasthistory = history.pop();
-    test.expect(3);
-    test.equals('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',game.boardToFenPos(h.startboard));
-    test.equals('rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R',game.boardToFenPos(firsthistory.board));
-    test.equals(game.boardToFenPos(newboard),game.boardToFenPos(lasthistory.board));
+    test.expect(4);
+    test.equals('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',game.toFenPos(h.startboard));
+    test.equals('rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R',game.toFenPos(firsthistory.board));
+    test.equals(game.toFenPos(newboard),game.toFenPos(lasthistory.board));
+    test.equals('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',game2.toFenPos());
     test.done();
 };
-
 exports.testIsCheckMove = function(test) {
     test.expect(4);
-    var game = fen();
+    var game = new fen();
     var last = undefined;
     game.mm('e2e4');
     last = game.getLastHistory();
@@ -148,10 +150,9 @@ exports.testIsCheckMove = function(test) {
     test.equals(8,hist.length);
     test.done();
 };
-
 exports.testTakeBack = function(test) {
     test.expect(3);
-    var game = fen();
+    var game = new fen();
     game.mm('e2e4');
     var hist = game.getHistory();
     test.equals(2, hist.length);

@@ -1,11 +1,9 @@
 var h = require('./help');
-var mlib = require('matrixlib');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {
-        obj = {
-            history:[{whiteSeat:{name:undefined},blackSeat:{name:undefined},board:h.startboard,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0,isCheckMove:false}]
-        };
+        obj = {};
+        obj.history = [{whiteSeat:{name:undefined},blackSeat:{name:undefined},board:h.startboard,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0,isCheckMove:false}]
     }
     var props = {};
     var last = obj.history[obj.history.length - 1];
@@ -14,42 +12,39 @@ function fenPGN(obj) {
             props[name] = last[name];
         }
     }
+    var board = last.board;
 	var moveMSAN = function(msanMove) {
         props.moveNum++;
+        if ((props.moveNum % 2) === 1) { 
+            props.activeplayer = 'b';
+        } else {
+            props.activeplayer = 'w';
+            props.fullmovenum++;
+        }
         props.move = msanMove;
 		props.totalmovestring += " " + msanMove; 
         props.totalmovestring = props.totalmovestring.trim();
 		props.board = h.updateBoardMSAN(props.board,msanMove);
+        board = props.board;
         props.isCheckMove = h.isCheckMove(props.board,props.move);
-        if ((obj.history.length % 2) === 1) { 
-            props.activeplayer = 'b';
-        } else {
-            props.activeplayer = 'w';
-        }
-        if (props.activeplayer == 'w') {
-            props.fullmovenum++;
-        }
 		var histObj = {board:props.board,move:msanMove,totalmovestring:props.totalmovestring,moveNum:obj.history.length,time:Date(),activeplayer:props.activeplayer,fullmovenum:props.fullmovenum,isCheckMove:props.isCheckMove};
-		obj.history = h.addMSANMove(obj.history,histObj);
+		obj.history.push(histObj);
 	};
-	var self = {};
-    self.isKingMated = function(params) {
-        var board = mlib.copy(params.board || props.board);
+    this.isKingMated = function(params) {
         var color = params.color;
         return h.isKingMated(board,color);
     };
-    self.isKingCheckedOnMove = function(board,move) {
-        var copy = mlib.copy(board);
-        var myboard = h.updateBoardMSAN(copy,move);
+    this.isKingCheckedOnMove = function(move) {
+        var myboard = h.updateBoardMSAN(move);
         return h.isKingChecked(myboard);
     };
-    self.getStartPieceInfo = function(board,msanMove) {
+    this.getStartPieceInfo = function(msanMove) {
         return h.getStartPieceInfo(board,msanMove);
     };
-    self.getProps = function() {
+    this.getProps = function() {
         return props;
     }
-    self.getActivePlayer = function() {
+    this.getActivePlayer = function() {
         if (props.activeplayer == 'w') {
             return 'white';
         } 
@@ -57,76 +52,70 @@ function fenPGN(obj) {
             return 'black';
         }
     };
-	self.getHistory = function() {
+	this.getHistory = function() {
 		return obj.history.slice();
 	};
-    self.getLastHistory = function() {
+    this.getLastHistory = function() {
         if (obj.history.length > 0) {
             return obj.history[obj.history.length - 1];
         }
     };
-    self.getAvailableSquares = function(board,row,col) {
+    this.getAvailableSquares = function(row,col) {
         return h.getAvailableSquares(board,row,col);   
     };
-    self.piecesUnicode = function() {
+    this.piecesUnicode = function() {
         return h.piecesUnicode;
     };
-    self.reset = function() {
+    this.reset = function() {
         for (var name in obj) {
             delete obj[name];
         };
         obj.history = [];
         obj.history.push({board:board,move:'',totalmovestring:'',moveNum:0,time:Date(),activeplayer:'w',fullmovenum:0,isCheckMove:false});
-        return self;
     };
-	self.showHistory = function() {
+	this.showHistory = function() {
 	    obj.history.forEach(function(obj) {
 			console.log(obj);
 		});
 	};
-    self.takeBack = function() {
+    this.takeBack = function() {
         obj.history.pop();
-        return self;
     };
-    self.boardToFenPos = function(board) {
-        return h.boardToFenPos(board);
+    this.toFenPos = function(newboard) {
+        return h.boardToFenPos(newboard || board);
     };
-	self.moveSAN = function(moveStr) {
+	this.moveSAN = function(moveStr) {
 		moveSAN(moveStr);
 	};
-	self.moveMSAN = function(moveStr) {
+	this.moveMSAN = function(moveStr) {
 		moveMSAN(moveStr);
 	};
-	self.move = function(moveStr) {
-		this.moveSAN(moveStr);
+	this.move = function(moveStr) {
+		moveSAN(moveStr);
 	};
-	self.mm = function(moveStr) {
-		this.moveMSAN(moveStr);
-        return self;
+	this.mm = function(moveStr) {
+		moveMSAN(moveStr);
+        return this;
 	};
-    self.totalmovestring = function() {
+    this.totalmovestring = function() {
         return props.totalmovestring;
     };
-	self.view = function() {
-		var copy = props.board.slice(0);
-        console.log(copy.reverse());
-		return self;
+	this.view = function() {
+        console.log(board);
 	};
-    self.board = function() { 
-        return props.board;
+    this.board = function() { 
+        return board;
     };
-    self.boardView = function() { 
-        return props.board.slice(0).reverse();
+    this.boardView = function() { 
+        return board.slice(0).reverse();
     };
-    self.setWhiteSeat = function(obj) {
+    this.setWhiteSeat = function(obj) {
         props.whiteSeat.name = obj.name;
-        return self;
     };
-    self.setBlackSeat = function(obj){
+    this.setBlackSeat = function(obj){
         props.blackSeat.name = obj.name;
-        return self;
     };
-    self.getSeated = function() {
+    this.getSeated = function() {
         var seated = {};
         if (props.blackSeat.name !== undefined) {
             seated.blackSeat = props.blackSeat;
@@ -136,5 +125,4 @@ function fenPGN(obj) {
         };
         return seated;
     };
-	return self;	
 };
