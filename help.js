@@ -1,4 +1,11 @@
-var mlib = require('matrixlib');
+var copy = function(matrix) {
+    var newMatrix = []; 
+    matrix.forEach(function(row) {
+        newMatrix.push(row.slice(0));
+    }); 
+    return newMatrix;
+};  
+
 //position startpos moves b1c3 c7c5 e2e4 g7g6 g1f3 f8g7 d2d4 c5d4
 exports.processMSANHistory = function(msanHistory) {
 	
@@ -30,7 +37,7 @@ exports.startboard = [['R','N','B','Q','K','B','N','R'],
 ['r','n','b','q','k','b','n','r']];
 exports.boardToFenPos = function(board) {
 	var fenPos = '';
-	var boardcopy = mlib.copy(board);
+	var boardcopy = copy(board);
 	boardcopy.reverse().forEach(function(row) {
 		fenPos += row.join('') + '/';
 	});
@@ -76,7 +83,7 @@ exports.getStartPieceInfo = function(board,msanMove) {
 // and we go ahead and resolve the castle. we also have to check for promotion.
 var updateBoardMSAN = function(board,msanMove) {
     msanMove = msanMove.toString();
-	var _board = mlib.copy(board); // work on a copy 
+	var _board = copy(board); // work on a copy 
 	var colHash = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8};
 	var start = msanMove.slice(0,2).trim(); var end = msanMove.slice(2,4).trim();
 	var startrow = start.slice(1,2); var endrow = end.slice(1,2);
@@ -1514,26 +1521,21 @@ var generateMove = function(fromPos,toPos) {
 // isKingMated (board,color)  
 // isKingMated(board,'black') checks if black's king is mated.
 exports.isKingMated = function(board,color) {
-//    var copy = mlib.copy(board);
     var results = {};
     results.whiteMated = false;
     results.blackMated = false;
     var pos = undefined;
     if (color == 'white') {
-        //pos = positionOf('K',copy);
         pos = positionOf('K',board);
     } else if (color == 'black') {
-        //pos = positionOf('k',copy);
         pos = positionOf('k',board);
     }
     if (pos !== undefined) {
-        //var list = getAllPieces(copy,color);
         var list = getAllPieces(board,color);
         for (var i = 0; i < list.length; i++) {
             var row = list[i].row;
             var col = list[i].col; 
             var piece = list[i].piece;
-            //var results = getAvailableSquares(copy,row,col);
             var results = getAvailableSquares(board,row,col);
             var squares = results.availableSquares;
             for (var j = 0; j < squares.length; j++) {
