@@ -35,11 +35,12 @@ function fenPGN(obj) {
         return h.isKingMated(board,color);
     };
     this.isKingCheckedOnMove = function(move) {
-        var myboard = h.updateBoardMSAN(move);
+        var myboard = h.updateBoardMSAN(board, move);
         return h.isKingChecked(myboard);
     };
-    this.getStartPieceInfo = function(msanMove) {
-        return h.getStartPieceInfo(board,msanMove);
+    this.getStartPieceInfo = function(params) {
+        var theboard = params.board || board; 
+        return h.getStartPieceInfo(theboard,params.msanMove);
     };
     this.getProps = function() {
         return props;
@@ -60,8 +61,9 @@ function fenPGN(obj) {
             return obj.history[obj.history.length - 1];
         }
     };
-    this.getAvailableSquares = function(row,col) {
-        return h.getAvailableSquares(board,row,col);   
+    this.getAvailableSquares = function(params) {
+        var theboard = params.board || board;
+        return h.getAvailableSquares(theboard,params.row,params.col);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
