@@ -1,5 +1,5 @@
 var fen = require('../index');
-var h = require('../help');
+var h = require('../lib/help');
 exports.testStateCheck = function(test) {
     var newboard = h.updateBoardMSAN(h.startboard,'g1f3');
     newboard = h.updateBoardMSAN(newboard,'d7d5');

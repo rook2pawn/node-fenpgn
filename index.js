@@ -1,4 +1,4 @@
-var h = require('./help');
+var h = require('./lib/help');
 exports = module.exports = fenPGN;
 function fenPGN(obj) {
     if (obj === undefined) {

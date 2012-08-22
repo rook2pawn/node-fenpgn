@@ -1,6 +1,15 @@
 node-fenpgn
 ===========
 
-FenPGN holds the state of a chess board along with its FEN positional notation and PGN History.
+Image Output
+============
 
-Documentation incoming. 
+
+Tests
+=====
+
+Tests for this module are in nodeunit, 
+
+    nodeunit ./test
+
+though this is likely to be changed to node-tap in the future.
