@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/rook2pawn/node-fenpgn.png)](http://travis-ci.org/rook2pawn/node-fenpgn)
 node-fenpgn
 ===========
 
