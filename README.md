@@ -1,9 +1,6 @@
 node-fenpgn
 ===========
 
-Image Output
-============
-
 
 Tests
 =====
