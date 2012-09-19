@@ -60,6 +60,10 @@ function fenPGN(history) {
         history.push(last);
         return this;
 	};
+    this.move = function(moveStr) {
+        this.mm(moveStr);
+        return this;
+    };
     this.totalmovestring = function() {
         return last.totalmovestring;
     };
