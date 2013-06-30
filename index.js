@@ -7,9 +7,8 @@ function fenPGN(history) {
         history.push(h.start);
     }
     var last = Hash.clone(history[history.length - 1]);
-    this.isKingMated = function(params) {
-        var color = params.color;
-        return h.isKingMated(last.board,color);
+    this.isKingMated = function(board,color) {
+        return h.isKingMated(board,color);
     };
     this.isKingCheckedOnMove = function(move) {
         var myboard = h.updateBoardMSAN(last.board, move);
