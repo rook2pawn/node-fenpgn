@@ -14,6 +14,9 @@ function fenPGN(history) {
         var myboard = h.updateBoardMSAN(last.board, move);
         return h.isKingChecked(myboard);
     };
+    this.isKingChecked = function(board) {
+        return h.isKingChecked(board);
+    };
     this.getStartPieceInfo = function(params) {
         var theboard = params.board || last.board; 
         return h.getStartPieceInfo(theboard,params.msanMove);
