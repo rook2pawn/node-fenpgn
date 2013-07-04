@@ -84,6 +84,9 @@ function fenPGN(history) {
     this.setBlackSeat = function(obj){
         last.blackSeat.name = obj.name;
     };
+    this.isPawnPromotionMove = function(board,msanMove) {
+        return h.isPawnPromotionMove(board,msanMove);
+    }
     this.getSeated = function() {
         var seated = {};
         if (last.blackSeat.name !== undefined) {
