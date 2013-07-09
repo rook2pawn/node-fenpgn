@@ -7,6 +7,7 @@ function fenPGN(history) {
         history.push(h.start);
     }
     var last = Hash.clone(history[history.length - 1]);
+    this.enpassantsquare = undefined;
     this.isKingMated = function(board,color) {
         return h.isKingMated(board,color);
     };
@@ -37,7 +38,7 @@ function fenPGN(history) {
     };
     this.getAvailableSquares = function(params) {
         var theboard = params.board || last.board;
-        return h.getAvailableSquares(theboard,params.row,params.col);   
+        return h.getAvailableSquares(theboard,params.row,params.col,this.enpassantsquare);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
@@ -58,7 +59,7 @@ function fenPGN(history) {
         return h.boardToFenPos(newboard || last.board);
     };
 	this.mm = function(moveStr) {
-		last = h.moveMSAN(last,moveStr);
+		last = h.moveMSAN.apply(this,[last,moveStr]);
         history.push(last);
         return this;
 	};
