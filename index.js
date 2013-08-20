@@ -1,44 +1,51 @@
 var h = require('./lib/help');
-var Hash = require('hashish');
 exports = module.exports = fenPGN;
 function fenPGN(history) {
     if (history === undefined) {
         history = [];
         history.push(h.start);
     }
-    var last = Hash.clone(history[history.length - 1]);
+    var last = function() {
+        return history[history.length - 1];
+    }
     this.enpassantsquare = undefined;
-    this.isKingMated = function(board,color) {
-        return h.isKingMated(board,color);
+    this.isKingMated = function(params) {
+        return h.isKingMated(params.board || last().board,params.color);
     };
     this.isKingCheckedOnMove = function(move) {
-        var myboard = h.updateBoardMSAN(last.board, move);
+        var myboard = h.updateBoardMSAN(last().board, move);
         return h.isKingChecked(myboard);
     };
     this.isKingChecked = function(board) {
-        return h.isKingChecked(board);
+        return h.isKingChecked(board || last().board);
+    };
+    this.convertMoveToPosition = function(msanMove) {
+        return h.convertMoveToPosition(msanMove);
     };
     this.getStartPieceInfo = function(params) {
-        var theboard = params.board || last.board; 
+        var theboard = params.board || last().board; 
         return h.getStartPieceInfo(theboard,params.msanMove);
     };
     this.getActivePlayer = function() {
-        if (last.activeplayer == 'w') {
+        if (last().activeplayer == 'w') {
             return 'white';
         } 
-        if (last.activeplayer == 'b') {
+        if (last().activeplayer == 'b') {
             return 'black';
         }
     };
 	this.getHistory = function() {
-		return Hash.clone(history);
+		return history;
 	};
+    this.setHistory = function(newhistory) {
+        history = newhistory;
+    }
     this.getLastHistory = function() {
-        return Hash.clone(last);
+        return history[history.length-1];
     };
     this.getAvailableSquares = function(params) {
-        var theboard = params.board || last.board;
-        return h.getAvailableSquares(theboard,params.row,params.col,this.enpassantsquare);   
+        var theboard = last().board;
+        return h.getAvailableSquares(params.board || theboard, params.row,params.col,this.enpassantsquare);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
@@ -56,11 +63,11 @@ function fenPGN(history) {
         history.pop();
     };
     this.toFenPos = function(newboard) {
-        return h.boardToFenPos(newboard || last.board);
+        return h.boardToFenPos(newboard || last().board);
     };
 	this.mm = function(moveStr) {
-		last = h.moveMSAN.apply(this,[last,moveStr]);
-        history.push(last);
+		var templast = h.moveMSAN.apply(this,[last(),moveStr]);
+        history.push(templast);
         return this;
 	};
     this.move = function(moveStr) {
@@ -71,13 +78,10 @@ function fenPGN(history) {
         return last.totalmovestring;
     };
 	this.view = function() {
-        console.log(last.board);
+        console.log(last().board);
 	};
     this.board = function() { 
-        return last.board;
-    };
-    this.boardView = function() { 
-        return last.board.slice(0).reverse();
+        return last().board;
     };
     this.setWhiteSeat = function(obj) {
         last.whiteSeat.name = obj.name;
