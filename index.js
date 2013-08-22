@@ -1,6 +1,8 @@
 var h = require('./lib/help');
 exports = module.exports = fenPGN;
 function fenPGN(history) {
+    if (!(this instanceof fenPGN)) 
+        return new fenPGN
     if (history === undefined) {
         history = [];
         history.push(h.start);
@@ -8,6 +10,8 @@ function fenPGN(history) {
     var last = function() {
         return history[history.length - 1];
     }
+    this.whiteSeat = undefined;
+    this.blackSeat = undefined;
     this.enpassantsquare = undefined;
     this.isKingMated = function(params) {
         return h.isKingMated(params.board || last().board,params.color);
@@ -84,22 +88,15 @@ function fenPGN(history) {
         return last().board;
     };
     this.setWhiteSeat = function(obj) {
-        last.whiteSeat.name = obj.name;
+        this.whiteSeat = obj;
     };
     this.setBlackSeat = function(obj){
-        last.blackSeat.name = obj.name;
+        this.blackSeat = obj;
     };
     this.isPawnPromotionMove = function(board,msanMove) {
         return h.isPawnPromotionMove(board,msanMove);
     }
     this.getSeated = function() {
-        var seated = {};
-        if (last.blackSeat.name !== undefined) {
-            seated.blackSeat = last.blackSeat;
-        };
-        if (last.whiteSeat.name !== undefined) {
-            seated.whiteSeat = last.whiteSeat;
-        };
-        return seated;
+        return {whiteSeat:this.whiteSeat,blackSeat:this.blackSeat}
     };
 };
