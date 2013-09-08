@@ -4,74 +4,82 @@ function fenPGN(history) {
     if (!(this instanceof fenPGN)) 
         return new fenPGN
     if (history === undefined) {
-        history = [];
-        history.push(h.start);
+        this.history = [];
+        this.history.push(h.start);
     }
-    var last = function() {
-        return history[history.length - 1];
+
+    // this flag is for mobile/lite cpu / client
+    this.lite = false; // if this is set to true, some processor intensive instructions will not be carried out
+    // namely no checking check status
+    // also not checking 3 move reptition
+    //etc...
+    
+    this.last = function() {
+        return this.history[this.history.length - 1];
     }
     this.whiteSeat = undefined;
     this.blackSeat = undefined;
     this.enpassantsquare = undefined;
     this.isKingMated = function(params) {
-        return h.isKingMated(params.board || last().board,params.color);
+        return h.isKingMated(params.board || this.last().board,params.color);
     };
     this.isKingCheckedOnMove = function(move) {
-        var myboard = h.updateBoardMSAN(last().board, move);
+        var myboard = h.updateBoardMSAN(this.last().board, move);
         return h.isKingChecked(myboard);
     };
     this.isKingChecked = function(board) {
-        return h.isKingChecked(board || last().board);
+        return h.isKingChecked(board || this.last().board);
     };
     this.convertMoveToPosition = function(msanMove) {
         return h.convertMoveToPosition(msanMove);
     };
     this.getStartPieceInfo = function(params) {
-        var theboard = params.board || last().board; 
+        var theboard = params.board || this.last().board; 
         return h.getStartPieceInfo(theboard,params.msanMove);
     };
     this.getActivePlayer = function() {
-        if (last().activeplayer == 'w') {
+        if (this.last().activeplayer == 'w') {
             return 'white';
         } 
-        if (last().activeplayer == 'b') {
+        if (this.last().activeplayer == 'b') {
             return 'black';
         }
     };
 	this.getHistory = function() {
-		return history;
+		return this.history;
 	};
     this.setHistory = function(newhistory) {
-        history = newhistory;
+        this.history = newhistory;
     }
     this.getLastHistory = function() {
-        return history[history.length-1];
+        return this.history[this.history.length-1];
     };
     this.getAvailableSquares = function(params) {
-        var theboard = last().board;
+        var theboard = this.last().board;
         return h.getAvailableSquares(params.board || theboard, params.row,params.col,this.enpassantsquare);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
     };
     this.reset = function() {
-        history = [];
-        history.push(h.start);
+        this.history = [];
+        this.history.push(h.start);
     };
 	this.showHistory = function() {
-	    history.forEach(function(obj) {
+	    this.history.forEach(function(obj) {
 			console.log(obj);
 		});
 	};
     this.takeBack = function() {
-        history.pop();
+        this.history.pop();
     };
     this.toFenPos = function(newboard) {
-        return h.boardToFenPos(newboard || last().board);
+        return h.boardToFenPos(newboard || this.last().board);
     };
 	this.mm = function(moveStr) {
-		var templast = h.moveMSAN.apply(this,[last(),moveStr]);
-        history.push(templast);
+        var oldlast = this.last(); 
+		var templast = h.moveMSAN.apply(this,[oldlast,moveStr]);
+        this.history.push(templast);
         return this;
 	};
     this.move = function(moveStr) {
@@ -79,13 +87,13 @@ function fenPGN(history) {
         return this;
     };
     this.totalmovestring = function() {
-        return last.totalmovestring;
+        return this.last().totalmovestring;
     };
 	this.view = function() {
-        console.log(last().board);
+        console.log(this.last().board);
 	};
     this.board = function() { 
-        return last().board;
+        return this.last().board;
     };
     this.setWhiteSeat = function(obj) {
         this.whiteSeat = obj;
