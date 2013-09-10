@@ -17,6 +17,7 @@ function fenPGN(history) {
     this.last = function() {
         return this.history[this.history.length - 1];
     }
+    this.matchid = undefined;
     this.whiteSeat = undefined;
     this.blackSeat = undefined;
     this.enpassantsquare = undefined;
@@ -95,6 +96,12 @@ function fenPGN(history) {
     this.board = function() { 
         return this.last().board;
     };
+    this.setMatchId = function(id) {
+        this.matchid = id;
+    }
+    this.getMatchId = function(id) {
+        return this.matchid;
+    }
     this.setWhiteSeat = function(obj) {
         this.whiteSeat = obj;
     };
