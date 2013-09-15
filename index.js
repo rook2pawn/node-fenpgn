@@ -20,6 +20,13 @@ function fenPGN(history) {
     this.matchid = undefined;
     this.whiteSeat = undefined;
     this.blackSeat = undefined;
+    this.result = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
+    this.setResult = function(result) {
+        this.result = result;
+    };
+    this.getResult = function() {
+        return this.result;
+    }
     this.enpassantsquare = undefined;
     this.isKingMated = function(params) {
         return h.isKingMated(params.board || this.last().board,params.color);
