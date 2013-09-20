@@ -5,7 +5,7 @@ function fenPGN(history) {
         return new fenPGN
     if (history === undefined) {
         this.history = [];
-        this.history.push(h.start);
+        this.history.push(h.start());
     }
 
     // this flag is for mobile/lite cpu / client
@@ -20,12 +20,12 @@ function fenPGN(history) {
     this.matchid = undefined;
     this.whiteSeat = undefined;
     this.blackSeat = undefined;
-    this.result = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
-    this.setResult = function(result) {
-        this.result = result;
+    this.status = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
+    this.setStatus = function(result) {
+        this.status = result;
     };
-    this.getResult = function() {
-        return this.result;
+    this.getStatus = function() {
+        return this.status;
     }
     this.enpassantsquare = undefined;
     this.isKingMated = function(params) {
@@ -71,7 +71,7 @@ function fenPGN(history) {
     };
     this.reset = function() {
         this.history = [];
-        this.history.push(h.start);
+        this.history.push(h.start());
     };
 	this.showHistory = function() {
 	    this.history.forEach(function(obj) {
