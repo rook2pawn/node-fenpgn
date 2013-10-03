@@ -29,10 +29,10 @@ function fenPGN(history) {
     }
     this.enpassantsquare = undefined;
     this.isKingMated = function(params) {
-        return h.isKingMated(params.board || this.last().board,params.color);
+        return h.isKingMated(this.last(),params.color);
     };
     this.isKingCheckedOnMove = function(move) {
-        var myboard = h.updateBoardMSAN(this.last().board, move);
+        var myboard = h.updateBoardMSAN(this.last(), move);
         return h.isKingChecked(myboard);
     };
     this.isKingChecked = function(board) {
@@ -63,8 +63,7 @@ function fenPGN(history) {
         return this.history[this.history.length-1];
     };
     this.getAvailableSquares = function(params) {
-        var theboard = this.last().board;
-        return h.getAvailableSquares(params.board || theboard, params.row,params.col,this.enpassantsquare);   
+        return h.getAvailableSquares(this.last(), params.row,params.col,this.enpassantsquare);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
