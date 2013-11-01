@@ -63,7 +63,7 @@ function fenPGN(history) {
         return this.history[this.history.length-1];
     };
     this.getAvailableSquares = function(params) {
-        return h.getAvailableSquares(this.last(), params.row,params.col,this.enpassantsquare);   
+        return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);   
     };
     this.piecesUnicode = function() {
         return h.piecesUnicode;
