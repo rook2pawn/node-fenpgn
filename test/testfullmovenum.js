@@ -1,20 +1,20 @@
 var fen = require('../index');
 var h = require('../lib/help');
-exports.testfullmovenum = function(test) {
-    test.expect(4);
-    var game = new fen();
-    var tempGame = game.mm('e2e4');
-    var lasthist = tempGame.getHistory().pop();
-    console.log(lasthist);
-    test.equals(0,lasthist.fullmovenum);
-    tempGame = tempGame.mm('e7e5');
-    lasthist = tempGame.getHistory().pop();
-    test.equals(1,lasthist.fullmovenum);
-    tempGame = tempGame.mm('g1f3');
-    lasthist = tempGame.getHistory().pop();
-    test.equals(1,lasthist.fullmovenum);
-    tempGame = tempGame.mm('d6d5');
-    lasthist = tempGame.getHistory().pop();
-    test.equals(2,lasthist.fullmovenum);
-    test.done();
-};
+var t = require('tape');
+t('testfullmovenum', function(test) {
+  test.plan(4);
+  var game = new fen();
+  var tempGame = game.mm('e2e4');
+  var lasthist = tempGame.getHistory().pop();
+  console.log(lasthist);
+  test.equals(0,lasthist.fullmovenum);
+  tempGame = tempGame.mm('e7e5');
+  lasthist = tempGame.getHistory().pop();
+  test.equals(1,lasthist.fullmovenum);
+  tempGame = tempGame.mm('g1f3');
+  lasthist = tempGame.getHistory().pop();
+  test.equals(1,lasthist.fullmovenum);
+  tempGame = tempGame.mm('d6d5');
+  lasthist = tempGame.getHistory().pop();
+  test.equals(2,lasthist.fullmovenum);
+});

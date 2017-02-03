@@ -1,21 +1,18 @@
 var fen = require('../index');
+var t = require('tape');
 
-exports.testActivePlayerAsPropertyOfHistory = function(test) {
-    test.expect(3);
-    var game = new fen();
-    var tempGame = history = undefined;
+t('testActivePlayerAsPropertyOfHistory',function(test) {
+    test.plan(4);
+    var game = new fen;
+
+    test.equals('w', game.getHistory().pop().activeplayer)
 //move 1
-    tempGame = game.mm('e2e4');
-    history = tempGame.getHistory();
-    console.log(history);
-    test.equals('b',history.pop().activeplayer);
+    game.mm('e2e4');
+    test.equals('b',game.getHistory().pop().activeplayer);
 //move 2
-    tempGame = tempGame.mm('e7e5');
-    history = tempGame.getHistory();
-    test.equals('w',history.pop().activeplayer);
+    game.mm('e7e5');
+    test.equals('w',game.getHistory().pop().activeplayer);
 //move3
-    tempGame = tempGame.mm('g1f3');
-    history = tempGame.getHistory();
-    test.equals('b',history.pop().activeplayer);
-    test.done();
-};
+    game.mm('g1f3');
+    test.equals('b',game.getHistory().pop().activeplayer);
+});

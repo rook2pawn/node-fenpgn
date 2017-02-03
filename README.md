@@ -2,11 +2,11 @@ node-fenpgn
 ===========
 
 
-Tests
-=====
+# Tests
 
-Tests for this module are in nodeunit, 
+  npm test
 
-    nodeunit ./test
 
-though this is likely to be changed to node-tap in the future.
+# LICENSE
+
+MIT

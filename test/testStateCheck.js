@@ -1,37 +1,17 @@
 var fen = require('../index');
 var h = require('../lib/help');
-exports.testStateCheck = function(test) {
-    var newboard = h.updateBoardMSAN(h.startboard,'g1f3');
-    newboard = h.updateBoardMSAN(newboard,'d7d5');
-    newboard = h.updateBoardMSAN(newboard,'f3g5');
-    newboard = h.updateBoardMSAN(newboard,'d5d4');
-    newboard = h.updateBoardMSAN(newboard,'e2e4');
-    newboard = h.updateBoardMSAN(newboard,'d4e3');
-    newboard = h.updateBoardMSAN(newboard,'f1e2');
-    newboard = h.updateBoardMSAN(newboard,'a7a6');
-    newboard = h.updateBoardMSAN(newboard,'e1g1');
-    newboard = h.updateBoardMSAN(newboard,'e3d2');
-    newboard = h.updateBoardMSAN(newboard,'a2a3');
-    newboard = h.updateBoardMSAN(newboard,'d2c1q');
+var t = require('tape');
 
-    var game = new fen();
-    game 
-        .mm('g1f3')
-        .mm('d7d5')
-        .mm('f3g5')
-        .mm('d5d4')
-        .mm('e2e4')
-        .mm('d4e3')
-        .mm('f1e2')
-        .mm('a7a6')
-        .mm('e1g1')
-        .mm('e3d2')
-        .mm('a2a3')
-        .mm('d2c1q')
-    ;
-    test.expect(3);
-    test.deepEqual(newboard,game.board());
-    test.deepEqual(newboard.slice(0).reverse(),game.boardView());
-    test.deepEqual(newboard,game.board());
-    test.done();
-};
+t('testStateCheck',function(test) {
+  var movelist = ['g1f3','d7d5','f3g5','d5d4','e2e4','d4e3','f1e2','a7a6','e1g1','e3d2','a2a3','d2c1q'];
+  var newboard = h.start();
+  for (var i = 0; i < movelist.length; i++) {
+    newboard = h.updateBoardMSAN(newboard,movelist[i]);    
+  }
+  var game = new fen;
+  for (var i = 0; i < movelist.length; i++) {
+    game.mm(movelist[i]);
+  }
+  test.plan(1);
+  test.deepEqual(newboard.board,game.board());
+});
