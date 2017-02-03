@@ -29,8 +29,8 @@ fenPGN.prototype.getStatus = function() {
       return this.status;
   }
 fenPGN.prototype.enpassantsquare = undefined;
-fenPGN.prototype.isKingMated = function(params) {
-      return h.isKingMated(this.last(),params.color);
+fenPGN.prototype.isKingMated = function(color) {
+      return h.isKingMated(this.last(),color);
   };
 fenPGN.prototype.isKingCheckedOnMove = function(move) {
       var myboard = h.updateBoardMSAN(this.last(), move);
