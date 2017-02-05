@@ -20,18 +20,21 @@ function fenPGN(history) {
 };
 
 fenPGN.prototype.last = function() {
-      return h.clone(this.history[this.history.length - 1]);
-  };
+  return h.clone(this.history[this.history.length - 1]);
+};
 fenPGN.prototype.setStatus = function(result) {
-    this.status = result;
-  };
+  this.status = result;
+};
 fenPGN.prototype.getStatus = function() {
-      return this.status;
-  }
+  return this.status;
+}
 fenPGN.prototype.enpassantsquare = undefined;
-fenPGN.prototype.isKingMated = function(color) {
-      return h.isKingMated(this.last(),color);
-  };
+fenPGN.prototype.isWhiteKingMated = function() {
+  return h.isKingMated(this.last(),'white');
+};
+fenPGN.prototype.isBlackKingMated = function() {
+  return h.isKingMated(this.last(),'black');
+};
 fenPGN.prototype.isKingCheckedOnMove = function(move) {
       var myboard = h.updateBoardMSAN(this.last(), move);
       return h.isKingChecked(myboard);
