@@ -1,4 +1,5 @@
 var h = require('./lib/help');
+var deep = require('deep-copy');
 exports = module.exports = fenPGN;
 function fenPGN(history) {
   if (!(this instanceof fenPGN)) 
@@ -20,7 +21,7 @@ function fenPGN(history) {
 };
 
 fenPGN.prototype.last = function() {
-  return h.clone(this.history[this.history.length - 1]);
+  return deep(this.history[this.history.length - 1]);
 };
 fenPGN.prototype.setStatus = function(result) {
   this.status = result;
@@ -59,13 +60,13 @@ fenPGN.prototype.getActivePlayer = function() {
   }
 };
 fenPGN.prototype.getHistory = function() {
-  return h.clone(this.history);
+  return deep(this.history);
 };
 fenPGN.prototype.setHistory = function(newhistory) {
   this.history = newhistory;
 }
 fenPGN.prototype.getLastHistory = function() {
-  return h.clone(this.history[this.history.length-1]);
+  return deep(this.history[this.history.length-1]);
 };
 fenPGN.prototype.getAvailableSquares = function(params) {
   return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);   
