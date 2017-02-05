@@ -51,31 +51,31 @@ fenPGN.prototype.getStartPieceInfo = function(params) {
   return h.getStartPieceInfo(theboard,params.msanMove);
 };
 fenPGN.prototype.getActivePlayer = function() {
-      if (this.last().activeplayer == 'w') {
-          return 'white';
-      } 
-      if (this.last().activeplayer == 'b') {
-          return 'black';
-      }
-  };
+  if (this.last().activeplayer == 'w') {
+    return 'white';
+  } 
+  if (this.last().activeplayer == 'b') {
+    return 'black';
+  }
+};
 fenPGN.prototype.getHistory = function() {
   return h.clone(this.history);
-  };
+};
 fenPGN.prototype.setHistory = function(newhistory) {
   this.history = newhistory;
-  }
+}
 fenPGN.prototype.getLastHistory = function() {
   return h.clone(this.history[this.history.length-1]);
 };
 fenPGN.prototype.getAvailableSquares = function(params) {
-      return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);   
-  };
+  return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);   
+};
 fenPGN.prototype.piecesUnicode = function() {
-      return h.piecesUnicode;
-  };
+  return h.piecesUnicode;
+};
 fenPGN.prototype.reset = function() {
-    this.history = [];
-    this.history.push(h.start());
+  this.history = [];
+  this.history.push(h.start());
 };
 fenPGN.prototype.showHistory = function() {
   this.history.forEach(function(obj) {
