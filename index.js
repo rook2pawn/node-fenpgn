@@ -29,6 +29,7 @@ fenPGN.prototype.getStatus = function() {
   return this.status;
 }
 fenPGN.prototype.enpassantsquare = undefined;
+
 fenPGN.prototype.isWhiteKingMated = function() {
   return h.isKingMated(this.last(),'white');
 };
@@ -36,19 +37,19 @@ fenPGN.prototype.isBlackKingMated = function() {
   return h.isKingMated(this.last(),'black');
 };
 fenPGN.prototype.isKingCheckedOnMove = function(move) {
-      var myboard = h.updateBoardMSAN(this.last(), move);
-      return h.isKingChecked(myboard);
-  };
+  var state = h.updateBoardMSAN(this.last(), move);
+  return h.isKingChecked(state.board);
+};
 fenPGN.prototype.isKingChecked = function(board) {
-      return h.isKingChecked(board || this.last().board);
-  };
+  return h.isKingChecked(board || this.last().board);
+};
 fenPGN.prototype.convertMoveToPosition = function(msanMove) {
-      return h.convertMoveToPosition(msanMove);
-  };
+  return h.convertMoveToPosition(msanMove);
+};
 fenPGN.prototype.getStartPieceInfo = function(params) {
-      var theboard = params.board || this.last().board; 
-      return h.getStartPieceInfo(theboard,params.msanMove);
-  };
+  var theboard = params.board || this.last().board; 
+  return h.getStartPieceInfo(theboard,params.msanMove);
+};
 fenPGN.prototype.getActivePlayer = function() {
       if (this.last().activeplayer == 'w') {
           return 'white';
