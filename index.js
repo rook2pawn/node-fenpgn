@@ -84,7 +84,9 @@ fenPGN.prototype.showHistory = function() {
   });
 };
 fenPGN.prototype.takeBack = function() {
-  this.history.pop();
+  if (this.history.length >= 2) {
+    this.history.pop();
+  }
 };
 fenPGN.prototype.toFenPos = function(board) {
   return h.boardToFenPos(board || this.last().board);
