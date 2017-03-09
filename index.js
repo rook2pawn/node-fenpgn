@@ -4,9 +4,13 @@ exports = module.exports = fenPGN;
 function fenPGN(history) {
   if (!(this instanceof fenPGN)) 
       return new fenPGN
-  if (history === undefined) {
-      this.history = [];
-      this.history.push(h.start());
+  this.history = [];
+  this.history.push(h.start());
+  if (history !== undefined) {
+    var that = this;
+    history.split(' ').forEach(function(move) {
+      that.mm(move);
+    })
   }
 
   // this flag is for mobile/lite cpu / client
@@ -88,12 +92,11 @@ fenPGN.prototype.takeBack = function() {
     this.history.pop();
   }
 };
-fenPGN.prototype.toFenPos = function(board) {
-  return h.boardToFenPos(board || this.last().board);
+fenPGN.prototype.getFenPos = function() {
+  return this.last().fenpos;
 };
 fenPGN.prototype.mm = function(moveStr) {
-  var oldlast = this.last(); 
-  var templast = h.moveMSAN.apply(this,[oldlast,moveStr]);
+  var templast = h.moveMSAN(this.last(),moveStr);
   this.history.push(templast);
   return this;
 };
