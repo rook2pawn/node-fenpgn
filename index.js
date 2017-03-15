@@ -33,8 +33,6 @@ fenPGN.prototype.setStatus = function(result) {
 fenPGN.prototype.getStatus = function() {
   return this.status;
 }
-fenPGN.prototype.enpassantsquare = undefined;
-
 fenPGN.prototype.isWhiteKingMated = function() {
   return h.isKingMated(this.last(),'white');
 };
