@@ -54,10 +54,11 @@ fenPGN.prototype.getStartPieceInfo = function(params) {
   return h.getStartPieceInfo(theboard,params.msanMove);
 };
 fenPGN.prototype.getActivePlayer = function() {
-  if (this.last().activeplayer == 'w') {
+  var activeplayer = this.history[this.history.length - 1].activeplayer;
+  if (activeplayer == 'w') {
     return 'white';
   } 
-  if (this.last().activeplayer == 'b') {
+  if (activeplayer == 'b') {
     return 'black';
   }
 };
