@@ -1,4 +1,5 @@
 var h = require('./lib/help');
+var fastGetAvailableSquares = require('./lib/fastGetAvailableSquares');
 var deep = require('deep-copy');
 exports = module.exports = fenPGN;
 function fenPGN(history) {
@@ -23,7 +24,13 @@ function fenPGN(history) {
   this.blackSeat = undefined;
   this.status = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
 };
-
+fenPGN.prototype.fastGetAvailableSquares = function(params) {
+  var last = this.history[this.history.length-1];
+  return fastGetAvailableSquares(last.board,last.board[params.row][params.col],
+    last.whiteKingsideCastleAvailable,last.whiteQueensideCastleAvailable,
+    last.blackKingsideCastleAvailable,last.blackQueensideCastleAvailable,
+    params.row,params.col,last.enpassantsquare);
+}
 fenPGN.prototype.last = function() {
   return deep(this.history[this.history.length - 1]);
 };
@@ -92,7 +99,7 @@ fenPGN.prototype.takeBack = function() {
   }
 };
 fenPGN.prototype.getFenPos = function() {
-  return this.last().fenpos;
+  return this.history[this.history.length-1].fenpos;
 };
 fenPGN.prototype.mm = function(moveStr) {
   var templast = h.moveMSAN(this.last(),moveStr);
