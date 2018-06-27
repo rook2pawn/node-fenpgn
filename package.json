@@ -9,13 +9,21 @@
     "url": "git://github.com/rook2pawn/node-fenpgn.git"
   },
   "scripts": {
-    "test": "tape test/test*.js | tap-spec"
+    "test": "nyc tape test/test*.js | tap-spec",
+    "coverage-html" : "nyc report --reporter=lcov npm test",
+    "coverage": "nyc report --reporter=text-lcov"
+  },
+  "nyc": {
+    "exclude": [
+      "test"
+    ]
   },
   "main": "index.js",
   "directories": {
     "test": " test"
   },
   "devDependencies": {
+    "nyc": "^12.0.2",
     "tap-spec": "^5.0.0",
     "tape": "^4.6.3"
   },
