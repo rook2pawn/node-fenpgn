@@ -9,13 +9,14 @@
     "url": "git://github.com/rook2pawn/node-fenpgn.git"
   },
   "scripts": {
-    "test": "tape test/test*.js"
+    "test": "tape test/test*.js | tap-spec"
   },
   "main": "index.js",
   "directories": {
     "test": " test"
   },
   "devDependencies": {
+    "tap-spec": "^5.0.0",
     "tape": "^4.6.3"
   },
   "dependencies": {
