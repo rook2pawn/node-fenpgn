@@ -6,6 +6,8 @@ node-fenpgn
 
   npm test
 
+# coverage
+  npm run coverage-html
 
 # LICENSE
 

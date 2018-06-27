@@ -58,9 +58,16 @@ t('testFenPos Position - no castle available', function(test) {
     test.equals(game.getFenPos(),'rnbq1rk1/ppppppbp/5np1/8/4P3/5N2/PPPPBPPP/RNBQ1KR1 b - - 5 5');
 });
 
-t.only('testFenPos Position - white queenside castle', function(test) {
+t('testFenPos Position - white queenside castle', function(test) {
     test.plan(1);
     var msan = 'b1c3 b8c6 b2b3 b7b6 c1b2 c8b7 e2e3 e7e6 d1e2 d8e7 e1c1';
     var game = new fen(msan);
-    test.equals(game.getFenPos(),'rnbq1rk1/ppppppbp/5np1/8/4P3/5N2/PPPPBPPP/RNBQKR2 w Q - 4 5');
+    test.equals(game.getFenPos(),'r3kbnr/pbppqppp/1pn1p3/8/8/1PN1P3/PBPPQPPP/2KR1BNR b kq - 3 6');
+});
+
+t('testFenPos Position - white queenside castle not available', function(test) {
+    test.plan(1);
+    var msan = 'b1c3 b8c6 b2b3 b7b6 c1b2 c8b7 e2e3 e7e6 d1e2 d8e7 a1b1';
+    var game = new fen(msan);
+    test.equals(game.getFenPos(),'r3kbnr/pbppqppp/1pn1p3/8/8/1PN1P3/PBPPQPPP/1R2KBNR b Kkq - 3 6');
 });
