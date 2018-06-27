@@ -3,14 +3,20 @@ var fastGetAvailableSquares = require('./lib/fastGetAvailableSquares');
 var deep = require('deep-copy');
 exports = module.exports = fenPGN;
 function fenPGN(history) {
-  if (!(this instanceof fenPGN)) 
+  if (!(this instanceof fenPGN))
       return new fenPGN
   this.history = [];
   this.history.push(h.start());
   if (history !== undefined) {
-    var that = this;
-    history.split(' ').forEach(function(move) {
-      that.mm(move);
+    history.split(' ').forEach((move) => {
+      console.log("Making move:", move);
+      this.mm(move);
+      console.log("AFter:", this.getFenPos())
+      var board = h.fenPosToBoard(this.getFenPos());
+      board.forEach((row) => {
+        console.log(row)
+      })
+      console.log("\n");
     })
   }
 
@@ -57,14 +63,14 @@ fenPGN.prototype.convertMoveToPosition = function(msanMove) {
   return h.convertMoveToPosition(msanMove);
 };
 fenPGN.prototype.getStartPieceInfo = function(params) {
-  var theboard = params.board || this.last().board; 
+  var theboard = params.board || this.last().board;
   return h.getStartPieceInfo(theboard,params.msanMove);
 };
 fenPGN.prototype.getActivePlayer = function() {
   var activeplayer = this.history[this.history.length - 1].activeplayer;
   if (activeplayer == 'w') {
     return 'white';
-  } 
+  }
   if (activeplayer == 'b') {
     return 'black';
   }
@@ -79,7 +85,7 @@ fenPGN.prototype.getLastHistory = function() {
   return deep(this.history[this.history.length-1]);
 };
 fenPGN.prototype.getAvailableSquares = function(params) {
-  return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);   
+  return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);
 };
 fenPGN.prototype.piecesUnicode = function() {
   return h.piecesUnicode;
@@ -116,7 +122,7 @@ fenPGN.prototype.totalmovestring = function() {
 fenPGN.prototype.view = function() {
   console.log(this.last().board);
 };
-fenPGN.prototype.board = function() { 
+fenPGN.prototype.board = function() {
   return this.last().board;
 };
 fenPGN.prototype.setMatchId = function(id) {
