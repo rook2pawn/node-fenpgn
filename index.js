@@ -10,15 +10,6 @@ function fenPGN(history) {
   if (history !== undefined) {
     history.split(' ').forEach((move) => {
       this.mm(move);
-      /*
-      console.log("Making move:", move);
-      console.log("AFter:", this.getFenPos())
-      var board = h.fenPosToBoard(this.getFenPos());
-      board.forEach((row) => {
-        console.log(row)
-      })
-      console.log("\n");
-      */
     })
   }
 
