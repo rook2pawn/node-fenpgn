@@ -9,8 +9,7 @@ test('testCapturePieceBlackPawn',function(t) {
     game.mm(movelist[i]);
   }
   t.plan(1);
-  t.equals(game.last().capturedPiece,'p','should capture black pawn p');
-//  test.deepEqual(newboard.board,game.board());
+  t.deepEqual(game.last().capturedPiece,{piece:'p', row:4, col:3},'should capture black pawn p');
 });
 
 test('testCapturePieceWhiteKnight',function(t) {
@@ -20,8 +19,7 @@ test('testCapturePieceWhiteKnight',function(t) {
     game.mm(movelist[i]);
   }
   t.plan(1);
-  t.equals(game.last().capturedPiece,'N','should capture white knight N');
-//  test.deepEqual(newboard.board,game.board());
+  t.deepEqual(game.last().capturedPiece,{piece:'N', row:4,col:4},'should capture white knight N');
 });
 
 test('testCapturePiece No capture taking place',function(t) {
@@ -31,6 +29,6 @@ test('testCapturePiece No capture taking place',function(t) {
     game.mm(movelist[i]);
   }
   t.plan(1);
-  t.equals(game.last().capturedPiece,'1','should capture empty space 1');
+  t.deepEqual(game.last().capturedPiece,{ piece: '1', row: 5, col: 3 },'should capture empty space 1');
 //  test.deepEqual(newboard.board,game.board());
 });

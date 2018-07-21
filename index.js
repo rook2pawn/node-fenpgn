@@ -113,7 +113,7 @@ fenPGN.prototype.totalmovestring = function() {
   return this.last().totalmovestring;
 };
 fenPGN.prototype.view = function() {
-  console.log(this.last().board);
+  console.log(this.last().board.reverse());
 };
 fenPGN.prototype.board = function() {
   return this.last().board;
