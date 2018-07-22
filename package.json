@@ -24,7 +24,8 @@
   "devDependencies": {
     "nyc": "^12.0.2",
     "tap-spec": "^5.0.0",
-    "tape": "^4.6.3"
+    "tape": "^4.9.1",
+    "uuid": "^3.3.2"
   },
   "dependencies": {
     "deep-copy": "^1.2.0"

@@ -2,13 +2,16 @@ var h = require('./lib/help');
 var fastGetAvailableSquares = require('./lib/fastGetAvailableSquares');
 var deep = require('deep-copy');
 exports = module.exports = fenPGN;
-function fenPGN(history) {
+function fenPGN(params) {
+  params = params || {};
   if (!(this instanceof fenPGN))
       return new fenPGN
+
   this.history = [];
   this.history.push(h.start());
-  if (history !== undefined) {
-    history.split(' ').forEach((move) => {
+
+  if (params.history !== undefined) {
+    params.history.split(' ').forEach((move) => {
       this.mm(move);
     })
   }
@@ -18,7 +21,10 @@ function fenPGN(history) {
   // namely no checking check status
   // also not checking 3 move reptition
   //etc...
-  this.matchid = undefined;
+  this.boardId = undefined;
+  if (params.id !== undefined) {
+    this.boardId = params.id;
+  }
   this.whiteSeat = undefined;
   this.blackSeat = undefined;
   this.status = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
@@ -118,11 +124,11 @@ fenPGN.prototype.view = function() {
 fenPGN.prototype.board = function() {
   return this.last().board;
 };
-fenPGN.prototype.setMatchId = function(id) {
-  fenPGN.prototype.matchid = id;
+fenPGN.prototype.setBoardId = function(id) {
+  fenPGN.prototype.boardId = id;
 }
-fenPGN.prototype.getMatchId = function(id) {
-  return this.matchid;
+fenPGN.prototype.getBoardId = function(id) {
+  return this.boardId;
 }
 fenPGN.prototype.setWhiteSeat = function(obj) {
   this.whiteSeat = obj;
