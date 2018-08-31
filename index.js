@@ -32,6 +32,16 @@ function fenPGN(params) {
     })
   }
 };
+fenPGN.prototype.placePieceLite = function(params) {
+  if (this.lite === false)
+    throw new Error("Not in lite mode")
+  let row = params.row;
+  let col = params.col;
+  let piece = params.piece;
+  let last = this.history[this.history.length-1];
+  let board = last.board;
+  board[row][col] = piece;
+}
 fenPGN.prototype.fastGetAvailableSquares = function(params) {
   var last = this.history[this.history.length-1];
   return fastGetAvailableSquares(last.board,last.board[params.row][params.col],
