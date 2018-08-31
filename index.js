@@ -8,7 +8,7 @@ function fenPGN(params) {
       return new fenPGN
 
   this.history = [];
-  this.history.push(h.start());
+  this.history.push(h.getInitialState());
 
   if (params.history !== undefined) {
     params.history.split(' ').forEach((move) => {
@@ -36,6 +36,9 @@ fenPGN.prototype.fastGetAvailableSquares = function(params) {
     last.blackKingsideCastleAvailable,last.blackQueensideCastleAvailable,
     params.row,params.col,last.enpassantsquare);
 }
+fenPGN.prototype.stateLive = function() {
+  return this.history[this.history.length - 1];
+};
 fenPGN.prototype.last = function() {
   return deep(this.history[this.history.length - 1]);
 };
@@ -91,7 +94,7 @@ fenPGN.prototype.piecesUnicode = function() {
 };
 fenPGN.prototype.reset = function() {
   this.history = [];
-  this.history.push(h.start());
+  this.history.push(h.getInitialState());
 };
 fenPGN.prototype.showHistory = function() {
   this.history.forEach(function(obj) {
@@ -125,7 +128,7 @@ fenPGN.prototype.board = function() {
   return this.last().board;
 };
 fenPGN.prototype.setBoardId = function(id) {
-  fenPGN.prototype.boardId = id;
+ fenPGN.prototype.boardId = id;
 }
 fenPGN.prototype.getBoardId = function(id) {
   return this.boardId;
