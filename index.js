@@ -7,27 +7,30 @@ function fenPGN(params) {
   if (!(this instanceof fenPGN))
       return new fenPGN
 
+  this.lite = false;
+  this.id = undefined;
+  this.whiteSeat = undefined;
+  this.blackSeat = undefined;
+  this.status = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
+
+  // relevant params 'lite', 'boardId'
+  Object.assign(this, params);
+  // make sure we start with blank history
   this.history = [];
-  this.history.push(h.getInitialState());
+
+  let initialState;
+  if (params.lite) {
+    initialState = h.getInitialStateLite();
+  } else {
+    initialState = h.getInitialState();
+  }
+  this.history.push(initialState)
 
   if (params.history !== undefined) {
     params.history.split(' ').forEach((move) => {
       this.mm(move);
     })
   }
-
-  // this flag is for mobile/lite cpu / client
-  this.lite = false; // if this is set to true, some processor intensive instructions will not be carried out
-  // namely no checking check status
-  // also not checking 3 move reptition
-  //etc...
-  this.boardId = undefined;
-  if (params.id !== undefined) {
-    this.boardId = params.id;
-  }
-  this.whiteSeat = undefined;
-  this.blackSeat = undefined;
-  this.status = 'open'; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
 };
 fenPGN.prototype.fastGetAvailableSquares = function(params) {
   var last = this.history[this.history.length-1];
@@ -84,7 +87,7 @@ fenPGN.prototype.setHistory = function(newhistory) {
   this.history = newhistory;
 }
 fenPGN.prototype.getLastHistory = function() {
-  return deep(this.history[this.history.length-1]);
+  return this.last()
 };
 fenPGN.prototype.getAvailableSquares = function(params) {
   return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);
@@ -110,7 +113,7 @@ fenPGN.prototype.getFenPos = function() {
   return this.history[this.history.length-1].fenpos;
 };
 fenPGN.prototype.mm = function(moveStr) {
-  var templast = h.moveMSAN(this.last(),moveStr);
+  var templast = h.moveMSAN(this.last(),moveStr, this.lite);
   this.history.push(templast);
   return this;
 };
@@ -128,10 +131,10 @@ fenPGN.prototype.board = function() {
   return this.last().board;
 };
 fenPGN.prototype.setBoardId = function(id) {
- fenPGN.prototype.boardId = id;
+  this.id = id;
 }
 fenPGN.prototype.getBoardId = function(id) {
-  return this.boardId;
+  return this.id;
 }
 fenPGN.prototype.setWhiteSeat = function(obj) {
   this.whiteSeat = obj;
