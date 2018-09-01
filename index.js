@@ -44,6 +44,7 @@ fenPGN.prototype.placePieceLite = function(params) {
 }
 fenPGN.prototype.fastGetAvailableSquares = function(params) {
   var last = this.history[this.history.length-1];
+  console.log("prototype fastGetAvailableSquares board:", last.board);  
   return fastGetAvailableSquares(last.board,last.board[params.row][params.col],
     last.whiteKingsideCastleAvailable,last.whiteQueensideCastleAvailable,
     last.blackKingsideCastleAvailable,last.blackQueensideCastleAvailable,
