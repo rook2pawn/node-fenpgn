@@ -2,6 +2,15 @@ var fen = require('../index');
 var h = require('../lib/help');
 var t = require('tape');
 
+t('testFenPos board2FenPos and FenPosToboard', function(test) {
+    test.plan(2);
+    var game = new fen;
+    const intialFenPos = game.getFenPos();
+    const calculatedFenPos = h.boardToFenPos(game.stateLive());
+    test.equal(calculatedFenPos, intialFenPos)
+    test.deepEqual(h.fenPosToBoard(intialFenPos), game.board());
+});
+
 t('testFenPos Position - first move', function(test) {
     test.plan(1);
     var msan = 'e2e4';

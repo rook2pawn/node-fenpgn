@@ -35,25 +35,6 @@ function fenPGN(params) {
 };
 
 fenPGN.analyze = require("./lib/analyze.js");
-
-fenPGN.prototype.placePieceLite = function(params) {
-  if (this.lite === false)
-    throw new Error("Not in lite mode")
-  let row = params.row;
-  let col = params.col;
-  let piece = params.piece;
-  let last = this.history[this.history.length-1];
-  let board = last.board;
-  board[row][col] = piece;
-}
-fenPGN.prototype.fastGetAvailableSquares = function(params) {
-  var last = this.history[this.history.length-1];
-  console.log("prototype fastGetAvailableSquares board:", last.board);
-  return fastGetAvailableSquares(last.board,last.board[params.row][params.col],
-    last.whiteKingsideCastleAvailable,last.whiteQueensideCastleAvailable,
-    last.blackKingsideCastleAvailable,last.blackQueensideCastleAvailable,
-    params.row,params.col,last.enpassantsquare);
-}
 fenPGN.prototype.allMoves = function() {
   return h.allMoves(this.last());
 }
@@ -69,11 +50,8 @@ fenPGN.prototype.setStatus = function(result) {
 fenPGN.prototype.getStatus = function() {
   return this.status;
 }
-fenPGN.prototype.isWhiteKingMated = function() {
-  return h.isKingMated(this.last(),'white');
-};
-fenPGN.prototype.isBlackKingMated = function() {
-  return h.isKingMated(this.last(),'black');
+fenPGN.prototype.isKingMated = function() {
+  return h.isKingMated(this.last());
 };
 fenPGN.prototype.isKingCheckedOnMove = function(move) {
   var state = h.updateBoardMSAN(this.last(), move);
@@ -104,11 +82,8 @@ fenPGN.prototype.getHistory = function() {
 fenPGN.prototype.setHistory = function(newhistory) {
   this.history = newhistory;
 }
-fenPGN.prototype.getLastHistory = function() {
-  return this.last()
-};
 fenPGN.prototype.getAvailableSquares = function(params) {
-  return h.getAvailableSquares(params.histitem || this.last(), params.row,params.col,params.enpassantsquare || this.enpassantsquare);
+  return h.getAvailableSquares(this.stateLive().board, params.row,params.col, {enpassantsquare: params.enpassantsquare || this.enpassantsquare});
 };
 fenPGN.prototype.piecesUnicode = function() {
   return h.piecesUnicode;
@@ -131,7 +106,7 @@ fenPGN.prototype.getFenPos = function() {
   return this.history[this.history.length-1].fenpos;
 };
 fenPGN.prototype.mm = function(moveStr) {
-  var templast = h.moveMSAN(this.last(),moveStr, this.lite);
+  var templast = h.moveMSAN(this.last(),moveStr);
   this.history.push(templast);
   return this;
 };
