@@ -13,9 +13,10 @@ t('testIsCheckMove',function(test) {
     game.mm('a5a4');
     test.equals(game.getLastHistory().blackChecked,false);
     test.equals(game.getActivePlayer(),'white')
+    debugger;
     game.mm('e6d7');
     test.equals(game.getActivePlayer(),'black')
-    test.equals(game.getLastHistory().blackChecked,true); 
+    test.equals(game.getLastHistory().blackChecked,true);
     // check that history hasn't been screwed with
     var hist = game.getHistory();
     // 7 moves + 1 startpos history

@@ -2,6 +2,7 @@ var h = require('./lib/help');
 var fastGetAvailableSquares = require('./lib/fastGetAvailableSquares');
 var deep = require('deep-copy');
 exports = module.exports = fenPGN;
+
 function fenPGN(params) {
   params = params || {};
   if (!(this instanceof fenPGN))
@@ -32,6 +33,9 @@ function fenPGN(params) {
     })
   }
 };
+
+fenPGN.analyze = require("./lib/analyze.js");
+
 fenPGN.prototype.placePieceLite = function(params) {
   if (this.lite === false)
     throw new Error("Not in lite mode")
@@ -44,11 +48,14 @@ fenPGN.prototype.placePieceLite = function(params) {
 }
 fenPGN.prototype.fastGetAvailableSquares = function(params) {
   var last = this.history[this.history.length-1];
-  console.log("prototype fastGetAvailableSquares board:", last.board);  
+  console.log("prototype fastGetAvailableSquares board:", last.board);
   return fastGetAvailableSquares(last.board,last.board[params.row][params.col],
     last.whiteKingsideCastleAvailable,last.whiteQueensideCastleAvailable,
     last.blackKingsideCastleAvailable,last.blackQueensideCastleAvailable,
     params.row,params.col,last.enpassantsquare);
+}
+fenPGN.prototype.allMoves = function() {
+  return h.allMoves(this.last());
 }
 fenPGN.prototype.stateLive = function() {
   return this.history[this.history.length - 1];
@@ -159,3 +166,4 @@ fenPGN.prototype.isPawnPromotionMove = function(board,msanMove) {
 fenPGN.prototype.getSeated = function() {
   return {whiteSeat:this.whiteSeat,blackSeat:this.blackSeat}
 };
+fenPGN.prototype.evaluateBoard = h.evaluateBoard;
