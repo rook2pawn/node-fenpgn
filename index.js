@@ -34,7 +34,8 @@ function fenPGN(params) {
   }
 };
 
-fenPGN.analyze = require("./lib/analyze.js");
+fenPGN.minmax = require("./lib/analyze.js");
+fenPGN.lib = h;
 fenPGN.prototype.allMoves = function() {
   return h.allMoves(this.last());
 }
@@ -82,7 +83,7 @@ fenPGN.prototype.getHistory = function() {
 fenPGN.prototype.setHistory = function(newhistory) {
   this.history = newhistory;
 }
-fenPGN.prototype.getAvailableSquares = function(params) {
+fenPGN.prototype.getAvailableSquares = function(board, row, col, opts) {
   return h.getAvailableSquares(this.stateLive().board, params.row,params.col, {enpassantsquare: params.enpassantsquare || this.enpassantsquare});
 };
 fenPGN.prototype.piecesUnicode = function() {
