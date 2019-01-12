@@ -11,7 +11,7 @@ t('test analyze fenstring', function(test) {
 });
 
 
-t.only('test analyze board', function(test) {
+t('test analyze board', function(test) {
   test.plan(1);
   var analyze = fen.minmax.analyzeBoard;
   const board = fen.minmax.fenPosToBoard("8/8/8/8/8/r7/n1b5/1B6");
