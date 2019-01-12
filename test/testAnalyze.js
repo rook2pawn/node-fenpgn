@@ -18,3 +18,11 @@ t('test analyze board', function(test) {
   const result = analyze(board, "black");
   test.equals(result, "c2b1")
 })
+
+
+t('test pawn promo', function(test) {
+  test.plan(1);
+  var analyze = fen.minmax.analyzeFenstring;
+  const result = analyze("8/8/8/8/8/8/7p/8", "black");
+  test.equals(result, "h2h1q")
+})
