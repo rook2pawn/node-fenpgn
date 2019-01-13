@@ -20,7 +20,7 @@ t('test analyze board', function(test) {
 })
 
 
-t.only('test pawn promo', function(test) {
+t('test pawn promo', function(test) {
   test.plan(2);
   var analyze = fen.minmax.analyzeFenstring;
   const result = analyze("8/8/8/8/8/1b6/PP5p/8", "black");
