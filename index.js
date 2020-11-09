@@ -84,9 +84,13 @@ fenPGN.prototype.getHistory = function () {
 fenPGN.prototype.setHistory = function (newhistory) {
   this.history = newhistory;
 };
-fenPGN.prototype.getAvailableSquares = function (board, row, col, opts) {
-  return h.getAvailableSquares(this.stateLive().board, params.row, params.col, {
-    enpassantsquare: params.enpassantsquare || this.enpassantsquare,
+fenPGN.prototype.getAvailableSquares = function ({
+  row,
+  col,
+  enpassantsquare,
+}) {
+  return h.getAvailableSquares(this.stateLive().board, row, col, {
+    enpassantsquare: enpassantsquare || this.enpassantsquare,
   });
 };
 fenPGN.prototype.piecesUnicode = function () {
