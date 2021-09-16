@@ -1,6 +1,6 @@
 # node-fenpgn
 
-````
+```
 npm install --save fenpgn
 ```
 
@@ -9,7 +9,7 @@ npm install --save fenpgn
 ```js
 const fen = require("fenpgn");
 fen.move("e2e4");
-````
+```
 
 ## Test
 
