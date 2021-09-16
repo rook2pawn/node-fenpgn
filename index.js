@@ -16,8 +16,17 @@ function fenPGN(params) {
 
   // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
 
-  const fsm_status = nanostate("open", {
+  const isDev = true;
+  const startState = isDev ? "open_dev" : "open";
+  const terminalState = isDev ? { reset: "open_dev" } : {};
+  const fsm_status = nanostate(startState, {
     open: { start: "inprogress", abandoned: "abandoned" },
+    open_dev: {
+      start: "inprogress",
+      abandoned: "abandoned",
+      reset: "reset",
+    },
+    reset: { open: "open_dev" },
     inprogress: {
       draw: "draw",
       whiteWins_checkmate: "whiteWins_checkmate",
@@ -26,19 +35,23 @@ function fenPGN(params) {
       whiteConcedes: "whiteConcedes",
       blackForfeits: "blackForfeits",
       whiteForfeits: "whiteForfeits",
+      blackAbandons: "blackAbandons",
+      whiteAbandons: "whiteAbandons",
       whiteWins_time: "whiteWins_time",
       blackWins_time: "blackWins_time",
     },
-    draw: {},
-    whiteWins_checkmate: {},
-    blackWins_checkmate: {},
-    blackConcedes: {},
-    whiteConcedes: {},
-    blackForfeits: {},
-    whiteForfeits: {},
-    whiteWins_time: {},
-    blackWins_time: {},
-    abandoned: {},
+    draw: terminalState,
+    whiteWins_checkmate: terminalState,
+    blackWins_checkmate: terminalState,
+    blackConcedes: terminalState,
+    whiteConcedes: terminalState,
+    blackForfeits: terminalState,
+    whiteForfeits: terminalState,
+    whiteWins_time: terminalState,
+    blackWins_time: terminalState,
+    blackAbandons: terminalState,
+    whiteAbandons: terminalState,
+    abandoned: terminalState,
   });
 
   this.status = fsm_status;
@@ -103,13 +116,15 @@ fenPGN.prototype.getActivePlayer = function () {
 fenPGN.prototype.getHistory = function () {
   return deep(this.history);
 };
-fenPGN.prototype.getAvailableSquares = function ({
-  row,
-  col,
-  enpassantsquare,
-}) {
-  return h.getAvailableSquares(this.stateLive().board, row, col, {
-    enpassantsquare: enpassantsquare || this.enpassantsquare,
+fenPGN.prototype.getAvailableSquares = function ({ row, col, opts = {} }) {
+  const state = this.stateLive();
+  return h.getAvailableSquares(state.board, row, col, {
+    enpassantsquare: state.enpassantsquare,
+    whiteKingsideCastleAvailable: state.whiteKingsideCastleAvailable,
+    whiteQueensideCastleAvailable: state.whiteQueensideCastleAvailable,
+    blackKingsideCastleAvailable: state.blackKingsideCastleAvailable,
+    blackQueensideCastleAvailable: state.blackQueensideCastleAvailable,
+    ...opts,
   });
 };
 fenPGN.prototype.getPiecesUnicode = function () {
@@ -131,7 +146,9 @@ fenPGN.prototype.getFenPos = function () {
 };
 fenPGN.prototype.mm = function (moveStr) {
   var templast = h.moveMSAN(this.last(), moveStr);
-  this.history.push(templast);
+  if (templast !== false) {
+    this.history.push(templast);
+  }
   return this;
 };
 fenPGN.prototype.move = function (moveStr) {
@@ -139,7 +156,7 @@ fenPGN.prototype.move = function (moveStr) {
   return this;
 };
 fenPGN.prototype.totalmovestring = function () {
-  return this.last().totalmovestring;
+  return this.history[this.history.length - 1].totalmovestring;
 };
 fenPGN.prototype.board = function () {
   return this.last().board;
@@ -171,3 +188,4 @@ fenPGN.prototype.empty = function () {
   }
 };
 fenPGN.prototype.evaluateBoard = h.evaluateBoard;
+fenPGN.prototype.convertPositionToMove = h.convertPositionToMove;
