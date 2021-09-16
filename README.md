@@ -1,14 +1,18 @@
-node-fenpgn
-===========
+# node-fenpgn
 
+## Usage
 
-# Tests
+```js
+const fen = require("./index2.js");
+const gameId = fen.createGame(); // this gameId can be used for persistance on later calls
+fen.move("e2e4");
+let board = fen.board();
+```
 
-  npm test
+## Test
 
-# coverage
-  npm run coverage-html
+npm test
 
-# LICENSE
+## LICENSE
 
 MIT

@@ -1,6 +1,8 @@
-var h = require("./lib/help");
-var fastGetAvailableSquares = require("./lib/fastGetAvailableSquares");
-var deep = require("deep-copy");
+const h = require("./lib/help");
+const fastGetAvailableSquares = require("./lib/fastGetAvailableSquares");
+const deep = require("deep-copy");
+const nanostate = require("nanostate");
+
 exports = module.exports = fenPGN;
 
 function fenPGN(params) {
@@ -11,8 +13,35 @@ function fenPGN(params) {
   this.id = undefined;
   this.whiteSeat = undefined;
   this.blackSeat = undefined;
-  this.status = "open"; // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
 
+  // can be draw, open (unfinished/inprogress), black, white, blackconcedes,whiteconcedes
+
+  const fsm_status = nanostate("open", {
+    open: { start: "inprogress", abandoned: "abandoned" },
+    inprogress: {
+      draw: "draw",
+      whiteWins_checkmate: "whiteWins_checkmate",
+      blackWins_checkmate: "blackWins_checkmate",
+      blackConcedes: "blackConcedes",
+      whiteConcedes: "whiteConcedes",
+      blackForfeits: "blackForfeits",
+      whiteForfeits: "whiteForfeits",
+      whiteWins_time: "whiteWins_time",
+      blackWins_time: "blackWins_time",
+    },
+    draw: {},
+    whiteWins_checkmate: {},
+    blackWins_checkmate: {},
+    blackConcedes: {},
+    whiteConcedes: {},
+    blackForfeits: {},
+    whiteForfeits: {},
+    whiteWins_time: {},
+    blackWins_time: {},
+    abandoned: {},
+  });
+
+  this.status = fsm_status;
   // relevant params 'lite', 'boardId'
   //  Object.assign(this, params);
   this.lite = params.lite;
@@ -46,27 +75,20 @@ fenPGN.prototype.stateLive = function () {
 fenPGN.prototype.last = function () {
   return deep(this.history[this.history.length - 1]);
 };
-fenPGN.prototype.setStatus = function (result) {
-  this.status = result;
+fenPGN.prototype.setAction = function (action) {
+  this.status.emit(action);
 };
 fenPGN.prototype.getStatus = function () {
-  return this.status;
+  return this.status.state;
 };
 fenPGN.prototype.isKingMated = function () {
   return h.isKingMated(this.last());
-};
-fenPGN.prototype.isKingCheckedOnMove = function (move) {
-  var state = h.updateBoardMSAN(this.last(), move);
-  return h.isKingChecked(state.board);
-};
-fenPGN.prototype.isKingChecked = function (board) {
-  return h.isKingChecked(board || this.last().board);
 };
 fenPGN.prototype.convertMoveToPosition = function (msanMove) {
   return h.convertMoveToPosition(msanMove);
 };
 fenPGN.prototype.getStartPieceInfo = function (params) {
-  var theboard = params.board || this.last().board;
+  var theboard = params.board || this.history[this.history.length - 1].board;
   return h.getStartPieceInfo(theboard, params.msanMove);
 };
 fenPGN.prototype.getActivePlayer = function () {
@@ -81,9 +103,6 @@ fenPGN.prototype.getActivePlayer = function () {
 fenPGN.prototype.getHistory = function () {
   return deep(this.history);
 };
-fenPGN.prototype.setHistory = function (newhistory) {
-  this.history = newhistory;
-};
 fenPGN.prototype.getAvailableSquares = function ({
   row,
   col,
@@ -93,7 +112,7 @@ fenPGN.prototype.getAvailableSquares = function ({
     enpassantsquare: enpassantsquare || this.enpassantsquare,
   });
 };
-fenPGN.prototype.piecesUnicode = function () {
+fenPGN.prototype.getPiecesUnicode = function () {
   return h.piecesUnicode;
 };
 fenPGN.prototype.reset = function () {
@@ -101,11 +120,6 @@ fenPGN.prototype.reset = function () {
   if (this.lite) {
     this.history.push(h.getInitialStateLite());
   } else this.history.push(h.getInitialState());
-};
-fenPGN.prototype.showHistory = function () {
-  this.history.forEach(function (obj) {
-    console.log(obj);
-  });
 };
 fenPGN.prototype.takeBack = function () {
   if (this.history.length >= 2) {
@@ -151,19 +165,9 @@ fenPGN.prototype.getSeated = function () {
 fenPGN.prototype.empty = function () {
   this.history = [];
   if (this.lite) {
-    console.log("IS LITE EMPTY");
     this.history.push(h.getInitialStateLite(true));
   } else {
     this.history.push(h.getInitialState());
   }
 };
-fenPGN.prototype.fill = function () {
-  this.history = [];
-  if (this.lite) {
-    this.history.push(h.getInitialStateLite(false));
-  } else {
-    this.history.push(h.getInitialState());
-  }
-};
-
 fenPGN.prototype.evaluateBoard = h.evaluateBoard;
