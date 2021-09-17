@@ -18,7 +18,7 @@ function fenPGN(params) {
 
   const isDev = true;
   const startState = isDev ? "open_dev" : "open";
-  const terminalState = isDev ? { reset: "open_dev" } : {};
+  const terminalState = isDev ? { reset: "reset" } : {};
   const fsm_status = nanostate(startState, {
     open: { start: "inprogress", abandoned: "abandoned" },
     open_dev: {
@@ -151,11 +151,27 @@ fenPGN.prototype.mm = function (moveStr) {
   var templast = h.moveMSAN(this.last(), moveStr);
   if (templast !== false) {
     this.history.push(templast);
+    return true;
   }
-  return this;
+  return false;
 };
 fenPGN.prototype.move = function (moveStr) {
-  this.mm(moveStr);
+  const isValidMove = this.mm(moveStr);
+  const last = this.history[this.history.length - 1];
+  console.log("move last:", last);
+  const { winner, moveNum } = last;
+  if (isValidMove) {
+    if (winner.length) {
+      if (winner === "w") {
+        this.status.emit("whiteWins_checkmate");
+      } else if (winner === "b") {
+        this.status.emit("blackWins_checkmate");
+      }
+    }
+    if (moveNum === 1) {
+      this.status.emit("start");
+    }
+  }
   return this;
 };
 fenPGN.prototype.totalmovestring = function () {
