@@ -85,6 +85,9 @@ fenPGN.prototype.allMoves = function () {
 fenPGN.prototype.stateLive = function () {
   return this.history[this.history.length - 1];
 };
+fenPGN.prototype.getPieceAtPosition = function ({ row, col }) {
+  return this.history[this.history.length - 1].board[row][col];
+};
 fenPGN.prototype.last = function () {
   return deep(this.history[this.history.length - 1]);
 };

@@ -71,3 +71,9 @@ t("test empty", function (test) {
     ["1", "1", "1", "1", "1", "1", "1", "1"],
   ]);
 });
+
+t("test getPieceAtPosition", function (test) {
+  test.plan(1);
+  const game = new fen();
+  test.equal(game.getPieceAtPosition({ row: 7, col: 4 }), "K");
+});
