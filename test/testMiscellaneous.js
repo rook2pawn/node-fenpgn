@@ -26,24 +26,6 @@ t("test boardSeat", function (test) {
   test.deepEqual(game.getSeated(), { whiteSeat, blackSeat });
 });
 
-t("test isPawnPromotionMove", function (test) {
-  test.plan(1);
-  const game = new fen();
-  const board = [
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "P", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-    ["1", "1", "1", "1", "1", "1", "1", "1"],
-  ];
-  const result = game.isPawnPromotionMove(board, "e7e8");
-  console.log("result:", result);
-  test.ok(true);
-});
-
 t("test empty", function (test) {
   test.plan(2);
   const game = new fen();

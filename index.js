@@ -85,7 +85,7 @@ function fenPGN(params) {
 fenPGN.minmax = require("./lib/analyze.js");
 fenPGN.lib = h;
 fenPGN.prototype.allMoves = function () {
-  return h.allMoves(this.last());
+  return h.allMoves(this.stateLive());
 };
 fenPGN.prototype.stateLive = function () {
   return this.history[this.history.length - 1];
@@ -125,19 +125,21 @@ fenPGN.prototype.getHistory = function () {
 };
 fenPGN.prototype.getAvailableSquares = function ({ row, col, opts = {} }) {
   const state = this.stateLive();
-  return h.getAvailableSquares({
-    board: state.board,
-    row,
-    col,
-    opts: {
-      enpassantsquare: state.enpassantsquare,
-      whiteKingsideCastleAvailable: state.whiteKingsideCastleAvailable,
-      whiteQueensideCastleAvailable: state.whiteQueensideCastleAvailable,
-      blackKingsideCastleAvailable: state.blackKingsideCastleAvailable,
-      blackQueensideCastleAvailable: state.blackQueensideCastleAvailable,
-      ...opts,
-    },
-  });
+  const { safeSquares, threatenedSquares, passedSquares } =
+    h.getAvailableSquares({
+      board: state.board,
+      row,
+      col,
+      opts: {
+        enpassantsquare: state.enpassantsquare,
+        whiteKingsideCastleAvailable: state.whiteKingsideCastleAvailable,
+        whiteQueensideCastleAvailable: state.whiteQueensideCastleAvailable,
+        blackKingsideCastleAvailable: state.blackKingsideCastleAvailable,
+        blackQueensideCastleAvailable: state.blackQueensideCastleAvailable,
+        ...opts,
+      },
+    });
+  return { safeSquares, threatenedSquares, passedSquares };
 };
 fenPGN.prototype.getPiecesUnicode = function () {
   return h.piecesUnicode;
@@ -165,17 +167,19 @@ fenPGN.prototype.mm = function (moveStr) {
   return false;
 };
 fenPGN.prototype.move = function (moveStr) {
+  // for lite we just mm without checking for promotion, without updating state machine, winner etc..
+  if (this.lite) {
+    return this.mm(moveStr);
+  }
   // incoming move is just point A to B i.e. e2e4.
   // however we first check if it is pawn Promotion in which case we have to NOT update the board  until
   // they make a decision as it can show a revealed check etc.
 
-  console.log("move:", moveStr);
   const startPiece = h.getStartPieceInfo({
     board: this.stateLive().board,
     msanMove: moveStr,
   });
   const isPromotionMove = h.isPromotionMove(moveStr);
-  console.log("startPiece", startPiece);
   if (!isPromotionMove) {
     // check for promotion
     if (
@@ -184,10 +188,8 @@ fenPGN.prototype.move = function (moveStr) {
     ) {
       if (startPiece.color === "white") {
         this.stateLive().promoPiece = { color: "white", msanMove: moveStr };
-        console.log("it is a promotion move");
         this.status.emit("promoWhite");
       } else if (startPiece.color === "black") {
-        console.log("it is a promotion move");
         this.stateLive().promoPiece = { color: "black", msanMove: moveStr };
         this.status.emit("promoBlack");
       }

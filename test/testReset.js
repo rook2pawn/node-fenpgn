@@ -17,6 +17,7 @@ t("test reset - lite", function (test) {
   const game = new fen({ lite: true });
   game.move("e2e4");
   const b = game.board();
+  console.log(JSON.stringify(b));
   test.equal("1", b[6][4]);
   game.reset();
   const c = game.board();
