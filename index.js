@@ -108,9 +108,8 @@ fenPGN.prototype.isKingMated = function () {
 fenPGN.prototype.convertMoveToPosition = function (msanMove) {
   return h.convertMoveToPosition(msanMove);
 };
-fenPGN.prototype.getStartPieceInfo = function (params) {
-  var theboard = params.board || this.history[this.history.length - 1].board;
-  return h.getStartPieceInfo(theboard, params.msanMove);
+fenPGN.prototype.getStartPieceInfo = function ({ board, msanMove }) {
+  return h.getStartPieceInfo({ board, msanMove });
 };
 fenPGN.prototype.getActivePlayer = function () {
   var activeplayer = this.history[this.history.length - 1].activeplayer;
@@ -126,13 +125,18 @@ fenPGN.prototype.getHistory = function () {
 };
 fenPGN.prototype.getAvailableSquares = function ({ row, col, opts = {} }) {
   const state = this.stateLive();
-  return h.getAvailableSquares(state.board, row, col, {
-    enpassantsquare: state.enpassantsquare,
-    whiteKingsideCastleAvailable: state.whiteKingsideCastleAvailable,
-    whiteQueensideCastleAvailable: state.whiteQueensideCastleAvailable,
-    blackKingsideCastleAvailable: state.blackKingsideCastleAvailable,
-    blackQueensideCastleAvailable: state.blackQueensideCastleAvailable,
-    ...opts,
+  return h.getAvailableSquares({
+    board: state.board,
+    row,
+    col,
+    opts: {
+      enpassantsquare: state.enpassantsquare,
+      whiteKingsideCastleAvailable: state.whiteKingsideCastleAvailable,
+      whiteQueensideCastleAvailable: state.whiteQueensideCastleAvailable,
+      blackKingsideCastleAvailable: state.blackKingsideCastleAvailable,
+      blackQueensideCastleAvailable: state.blackQueensideCastleAvailable,
+      ...opts,
+    },
   });
 };
 fenPGN.prototype.getPiecesUnicode = function () {
@@ -166,10 +170,13 @@ fenPGN.prototype.move = function (moveStr) {
   // they make a decision as it can show a revealed check etc.
 
   console.log("move:", moveStr);
-  const startPiece = h.getStartPieceInfo(this.stateLive().board, moveStr);
+  const startPiece = h.getStartPieceInfo({
+    board: this.stateLive().board,
+    msanMove: moveStr,
+  });
+  const isPromotionMove = h.isPromotionMove(moveStr);
   console.log("startPiece", startPiece);
-  if (!h.isPromotionMove(moveStr)) {
-    console.log("not a promotion move. Checking to see if there is a promotion");
+  if (!isPromotionMove) {
     // check for promotion
     if (
       startPiece.startpiece.toLowerCase() == "p" &&
@@ -182,7 +189,6 @@ fenPGN.prototype.move = function (moveStr) {
       } else if (startPiece.color === "black") {
         console.log("it is a promotion move");
         this.stateLive().promoPiece = { color: "black", msanMove: moveStr };
-
         this.status.emit("promoBlack");
       }
       return false;
@@ -190,7 +196,6 @@ fenPGN.prototype.move = function (moveStr) {
   }
   const isValidMove = this.mm(moveStr);
   const last = this.history[this.history.length - 1];
-  console.log("msanMove:", moveStr, "isValidMove:", isValidMove,  " move last:", last);
   const { winner, moveNum } = last;
   if (isValidMove) {
     if (winner.length) {
@@ -200,7 +205,9 @@ fenPGN.prototype.move = function (moveStr) {
         this.status.emit("blackWins_checkmate");
       }
     }
-    if (moveNum === 1) {
+    if (isPromotionMove) {
+      this.status.emit("selected");
+    } else if (moveNum === 1) {
       this.status.emit("start");
     }
   }
