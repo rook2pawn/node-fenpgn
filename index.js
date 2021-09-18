@@ -4,12 +4,16 @@ const deep = require("deep-copy");
 const nanostate = require("nanostate");
 
 exports = module.exports = fenPGN;
-function fenPGN(params) {
-  params = params || {};
+function fenPGN({
+  lite = false,
+  history = [],
+  useTestBoard = false,
+  id = "",
+} = {}) {
   if (!(this instanceof fenPGN)) return new fenPGN();
 
-  this.lite = false;
-  this.id = undefined;
+  this.lite = lite;
+  this.id = id;
   this.whiteSeat = undefined;
   this.blackSeat = undefined;
 
@@ -60,23 +64,19 @@ function fenPGN(params) {
   });
 
   this.status = fsm_status;
-  // relevant params 'lite', 'boardId'
-  //  Object.assign(this, params);
-  this.lite = params.lite;
-  this.id = params.id;
   // make sure we start with blank history
   this.history = [];
 
   let initialState;
-  if (params.lite) {
+  if (lite) {
     initialState = h.getInitialStateLite();
   } else {
-    initialState = h.getInitialState();
+    initialState = h.getInitialState({ useTestBoard });
   }
   this.history.push(initialState);
 
-  if (params.history !== undefined) {
-    params.history.split(" ").forEach((move) => {
+  if (history.length) {
+    history.split(" ").forEach((move) => {
       this.mm(move);
     });
   }
