@@ -1,5 +1,4 @@
 const h = require("./lib/help");
-const fastGetAvailableSquares = require("./lib/fastGetAvailableSquares");
 const deep = require("deep-copy");
 const nanostate = require("nanostate");
 
@@ -30,6 +29,17 @@ function fenPGN({
       reset: "reset",
       promoWhite: "promoSelectionWhite",
       promoBlack: "promoSelectionBlack",
+      draw: "draw",
+      whiteWins_checkmate: "whiteWins_checkmate",
+      blackWins_checkmate: "blackWins_checkmate",
+      blackConcedes: "blackConcedes",
+      whiteConcedes: "whiteConcedes",
+      blackForfeits: "blackForfeits",
+      whiteForfeits: "whiteForfeits",
+      blackAbandons: "blackAbandons",
+      whiteAbandons: "whiteAbandons",
+      whiteWins_time: "whiteWins_time",
+      blackWins_time: "blackWins_time",
     },
     reset: { open: "open_dev" },
     inprogress: {
@@ -82,7 +92,7 @@ function fenPGN({
   }
 }
 
-fenPGN.minmax = require("./lib/analyze.js");
+fenPGN.minmax = require("./lib/evaluate.js");
 fenPGN.lib = h;
 fenPGN.prototype.allMoves = function () {
   return h.allMoves(this.stateLive());
@@ -209,7 +219,7 @@ fenPGN.prototype.move = function (moveStr) {
     }
     if (isPromotionMove) {
       this.status.emit("selected");
-    } else if (moveNum === 1) {
+    } else if (moveNum === 1 && winner.length === 0) {
       this.status.emit("start");
     }
   }
@@ -244,5 +254,4 @@ fenPGN.prototype.empty = function () {
     this.history.push(h.getInitialState());
   }
 };
-fenPGN.prototype.evaluateBoard = h.evaluateBoard;
 fenPGN.prototype.convertPositionToMove = h.convertPositionToMove;
