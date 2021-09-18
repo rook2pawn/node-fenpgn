@@ -1,5 +1,6 @@
 const h = require("./lib/help");
 const deep = require("deep-copy");
+const Evaluate = require("./lib/evaluate");
 const nanostate = require("nanostate");
 
 exports = module.exports = fenPGN;
@@ -255,3 +256,6 @@ fenPGN.prototype.empty = function () {
   }
 };
 fenPGN.prototype.convertPositionToMove = h.convertPositionToMove;
+
+fenPGN.prototype.Evaluate = Evaluate; // put this on new instance objects
+fenPGN.Evaluate = Evaluate; // and also so you can require it i.e. require("fenpgn").Evaluate
