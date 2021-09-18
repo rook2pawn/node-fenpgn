@@ -4,7 +4,6 @@ const deep = require("deep-copy");
 const nanostate = require("nanostate");
 
 exports = module.exports = fenPGN;
-
 function fenPGN(params) {
   params = params || {};
   if (!(this instanceof fenPGN)) return new fenPGN();
@@ -25,6 +24,8 @@ function fenPGN(params) {
       start: "inprogress",
       abandoned: "abandoned",
       reset: "reset",
+      promoWhite: "promoSelectionWhite",
+      promoBlack: "promoSelectionBlack",
     },
     reset: { open: "open_dev" },
     inprogress: {
@@ -39,7 +40,11 @@ function fenPGN(params) {
       whiteAbandons: "whiteAbandons",
       whiteWins_time: "whiteWins_time",
       blackWins_time: "blackWins_time",
+      promoWhite: "promoSelectionWhite",
+      promoBlack: "promoSelectionBlack",
     },
+    promoSelectionWhite: { selected: "inprogress" },
+    promoSelectionBlack: { selected: "inprogress" },
     draw: terminalState,
     whiteWins_checkmate: terminalState,
     blackWins_checkmate: terminalState,
@@ -156,6 +161,30 @@ fenPGN.prototype.mm = function (moveStr) {
   return false;
 };
 fenPGN.prototype.move = function (moveStr) {
+  // incoming move is just point A to B i.e. e2e4.
+  // however we first check if it is pawn Promotion in which case we have to NOT update the board  until
+  // they make a decision as it can show a revealed check etc.
+
+  console.log("move:", moveStr);
+  const startPiece = h.getStartPieceInfo(this.stateLive().board, moveStr);
+  console.log("startPiece", startPiece);
+  if (!h.isPromotionMove(moveStr)) {
+    // check for promotion
+    if (
+      startPiece.startpiece.toLowerCase() == "p" &&
+      (startPiece.endRow == 7 || startPiece.endRow == 0)
+    ) {
+      if (startPiece.color === "white") {
+        this.stateLive().promoPiece = { color: "white" };
+        this.status.emit("promoWhite");
+      } else if (startPiece.color === "black") {
+        this.stateLive().promoPiece = { color: "black" };
+
+        this.status.emit("promoBlack");
+      }
+      return false;
+    }
+  }
   const isValidMove = this.mm(moveStr);
   const last = this.history[this.history.length - 1];
   console.log("move last:", last);
@@ -191,9 +220,6 @@ fenPGN.prototype.setWhiteSeat = function (obj) {
 };
 fenPGN.prototype.setBlackSeat = function (obj) {
   this.blackSeat = obj;
-};
-fenPGN.prototype.isPawnPromotionMove = function (board, msanMove) {
-  return h.isPawnPromotionMove(board, msanMove);
 };
 fenPGN.prototype.getSeated = function () {
   return { whiteSeat: this.whiteSeat, blackSeat: this.blackSeat };
