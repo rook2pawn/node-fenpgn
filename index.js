@@ -169,16 +169,19 @@ fenPGN.prototype.move = function (moveStr) {
   const startPiece = h.getStartPieceInfo(this.stateLive().board, moveStr);
   console.log("startPiece", startPiece);
   if (!h.isPromotionMove(moveStr)) {
+    console.log("not a promotion move. Checking to see if there is a promotion");
     // check for promotion
     if (
       startPiece.startpiece.toLowerCase() == "p" &&
       (startPiece.endRow == 7 || startPiece.endRow == 0)
     ) {
       if (startPiece.color === "white") {
-        this.stateLive().promoPiece = { color: "white" };
+        this.stateLive().promoPiece = { color: "white", msanMove: moveStr };
+        console.log("it is a promotion move");
         this.status.emit("promoWhite");
       } else if (startPiece.color === "black") {
-        this.stateLive().promoPiece = { color: "black" };
+        console.log("it is a promotion move");
+        this.stateLive().promoPiece = { color: "black", msanMove: moveStr };
 
         this.status.emit("promoBlack");
       }
@@ -187,7 +190,7 @@ fenPGN.prototype.move = function (moveStr) {
   }
   const isValidMove = this.mm(moveStr);
   const last = this.history[this.history.length - 1];
-  console.log("move last:", last);
+  console.log("msanMove:", moveStr, "isValidMove:", isValidMove,  " move last:", last);
   const { winner, moveNum } = last;
   if (isValidMove) {
     if (winner.length) {
