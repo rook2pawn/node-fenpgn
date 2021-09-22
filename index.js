@@ -1,6 +1,7 @@
 const h = require("./lib/help");
 const deep = require("deep-copy");
-const Evaluate = require("./lib/evaluate");
+const Evaluate = require("./minmax/index.js");
+console.log("EVALUATE!:", Evaluate);
 const nanostate = require("nanostate");
 
 exports = module.exports = fenPGN;
@@ -93,7 +94,6 @@ function fenPGN({
   }
 }
 
-fenPGN.minmax = require("./lib/evaluate.js");
 fenPGN.lib = h;
 fenPGN.prototype.allMoves = function () {
   return h.allMoves(this.stateLive());

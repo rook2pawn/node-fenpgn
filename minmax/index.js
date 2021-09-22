@@ -1,4 +1,4 @@
-const lib = require("./help");
+const lib = require("../lib/help");
 
 function getPieceValue(piece) {
   if (piece === "1") {

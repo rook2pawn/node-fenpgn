@@ -1,4 +1,4 @@
-var Evaluate = require("../lib/evaluate");
+var Evaluate = require("../minmax");
 var t = require("tape");
 
 t("test analyze fenstring", async function (test) {
