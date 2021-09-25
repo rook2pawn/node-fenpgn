@@ -1,13 +1,13 @@
 const h = require("./lib/help");
 const deep = require("deep-copy");
-const Evaluate = require("./minmax/index.js");
-console.log("EVALUATE!:", Evaluate);
 const nanostate = require("nanostate");
 
 exports = module.exports = fenPGN;
 function fenPGN({
   lite = false,
-  history = [],
+  historyMSAN = [],
+  customStartBoard = undefined,
+  startingColor = "white",
   useTestBoard = false,
   id = "",
 } = {}) {
@@ -76,19 +76,21 @@ function fenPGN({
   });
 
   this.status = fsm_status;
-  // make sure we start with blank history
-  this.history = [];
 
   let initialState;
   if (lite) {
     initialState = h.getInitialStateLite();
   } else {
-    initialState = h.getInitialState({ useTestBoard });
+    initialState = h.getInitialState({
+      useTestBoard,
+      customStartBoard,
+      startingColor,
+    });
   }
-  this.history.push(initialState);
+  this.history = [initialState];
 
-  if (history.length) {
-    history.split(" ").forEach((move) => {
+  if (historyMSAN.length) {
+    historyMSAN.split(" ").forEach((move) => {
       this.mm(move);
     });
   }
@@ -170,7 +172,7 @@ fenPGN.prototype.getFenPos = function () {
   return this.history[this.history.length - 1].fenpos;
 };
 fenPGN.prototype.mm = function (moveStr) {
-  var templast = h.moveMSAN(this.last(), moveStr);
+  var templast = h.moveMSAN(this.stateLive(), moveStr);
   if (templast !== false) {
     this.history.push(templast);
     return true;
@@ -257,5 +259,6 @@ fenPGN.prototype.empty = function () {
 };
 fenPGN.prototype.convertPositionToMove = h.convertPositionToMove;
 
-fenPGN.prototype.Evaluate = Evaluate; // put this on new instance objects
-fenPGN.Evaluate = Evaluate; // and also so you can require it i.e. require("fenpgn").Evaluate
+fenPGN.prototype.displayBoard = function () {
+  return h.displayBoard(this.stateLive().board);
+};

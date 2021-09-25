@@ -1,32 +1,45 @@
-var materialanalysis = function(b) {
-    var pointvalues = {
-        'p' : 100,
-        'n' : 400,
-        'b' : 400,
-        'r' : 600,
-        'q' : 1200,
-        'k' : 10000
-    };
-    var black = 0;
-    var white = 0;
-    for (var row = 0; row <= 7; row++) {
-        for (var col = 0; col <= 7; col++) {
-            var piece = b[row][col];
-                if (piece !== '1') {
-                    if (piece == piece.toLowerCase())
-                        black += pointvalues[piece];
-                    else 
-                        white += pointvalues[piece.toLowerCase()];        
-                }
-        }
+function getPieceValue(piece) {
+  if (piece === "1") {
+    return 0;
+  }
+
+  let color = 1; // 'white'
+  let lc = piece.toLowerCase();
+  if (piece === lc) {
+    color = -1; // 'black'
+  }
+  switch (lc) {
+    case "p":
+      return 10 * color;
+      break;
+    case "r":
+      return 50 * color;
+      break;
+    case "n":
+      return 30 * color;
+      break;
+    case "b":
+      return 30 * color;
+      break;
+    case "q":
+      return 90 * color;
+      break;
+    case "k":
+      return 900 * color;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
+const evaluate_material = function (board) {
+  var totalEvaluation = 0;
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      totalEvaluation = totalEvaluation + getPieceValue(board[i][j]);
     }
-    return { black: black, white:white }
+  }
+  return totalEvaluation;
 };
-var difference = function(obj1,obj2) {
-    var diffset = {};
-    diffset.black = obj1.black - obj2.black;
-    diffset.white = obj1.white - obj2.white;
-    return diffset;
-};
-exports.materialanalysis = materialanalysis;
-exports.difference = difference;
+module.exports = exports = evaluate_material;

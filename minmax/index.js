@@ -1,50 +1,8 @@
 const lib = require("../lib/help");
+const fen = require("../index");
+const Evaluator = require("./evaluator");
 
-function getPieceValue(piece) {
-  if (piece === "1") {
-    return 0;
-  }
-
-  let color = 1; // 'white'
-  let lc = piece.toLowerCase();
-  if (piece === lc) {
-    color = -1; // 'black'
-  }
-  switch (lc) {
-    case "p":
-      return 10 * color;
-      break;
-    case "r":
-      return 50 * color;
-      break;
-    case "n":
-      return 30 * color;
-      break;
-    case "b":
-      return 30 * color;
-      break;
-    case "q":
-      return 90 * color;
-      break;
-    case "k":
-      return 900 * color;
-      break;
-    default:
-      return 0;
-      break;
-  }
-}
-
-const evaluateBoard = function (board) {
-  var totalEvaluation = 0;
-  for (var i = 0; i < 8; i++) {
-    for (var j = 0; j < 8; j++) {
-      totalEvaluation = totalEvaluation + getPieceValue(board[i][j]);
-    }
-  }
-  return totalEvaluation;
-};
-
+const LOGGING = false;
 const fenPosToBoard = function (fenPos) {
   var lines = fenPos.split("/");
   // like haskell's replicate function
@@ -66,12 +24,6 @@ const fenPosToBoard = function (fenPos) {
   return board;
 };
 exports.fenPosToBoard = fenPosToBoard;
-
-function displayBoard(board) {
-  board.forEach((row, idx) => {
-    console.log(`${8 - idx}: ${row.join("")}`);
-  });
-}
 
 const generateMoves = function (board, color) {
   const moves = [];
@@ -107,50 +59,71 @@ const generateMoves = function (board, color) {
   return moves;
 };
 let count = 0;
-var minimax = function (depth, board, isMaximizingPlayer) {
+var minimax = function ({ depth, game, isMaximizingPlayer, move }) {
   var color = isMaximizingPlayer ? "white" : "black";
+
+  LOGGING &&
+    console.log(
+      "minimax depth, color, isMaximizingPlayer, move that brought us here:",
+      depth,
+      color,
+      isMaximizingPlayer,
+      move
+    );
+  LOGGING && console.log("totalMoves so Far:", game.totalmovestring());
+  LOGGING && game.displayBoard();
+
   if (depth === 0) {
-    let num = evaluateBoard(board);
+    let num = Evaluator.evaluateBoard(game.stateLive().board);
     count++;
-    //    console.log(`depth is 0, returning eval:${num}`)
     return num;
   }
-  var newGameMoves = generateMoves(board, color);
-  //  console.log("generated ", newGameMoves.length, " for color:", color);
-
+  var newGameMoves = game.allMoves();
+  LOGGING && console.log("newGameMoves:", newGameMoves);
   if (isMaximizingPlayer) {
-    //    console.log("isMaximizingPlayer")
     var bestMove = -9999;
     for (var i = 0; i < newGameMoves.length; i++) {
-      //      console.log(`trying ${newGameMoves[i]}`)
-      let result = lib.updateBoardMSAN(board, newGameMoves[i]);
-      //      displayBoard(result.board)
+      game.mm(newGameMoves[i]);
       bestMove = Math.max(
         bestMove,
-        minimax(depth - 1, result.board, !isMaximizingPlayer)
+        minimax({
+          depth: depth - 1,
+          game,
+          isMaximizingPlayer: !isMaximizingPlayer,
+          move: newGameMoves[i],
+        })
       );
+      game.takeBack();
     }
     return bestMove;
   } else {
-    //    console.log("is NOT MaximizingPlayer")
     var bestMove = 9999;
     for (var i = 0; i < newGameMoves.length; i++) {
-      //      console.log(`trying ${newGameMoves[i]}`)
-      let result = lib.updateBoardMSAN(board, newGameMoves[i]);
+      game.mm(newGameMoves[i]);
       bestMove = Math.min(
         bestMove,
-        minimax(depth - 1, result.board, !isMaximizingPlayer)
+        minimax({
+          depth: depth - 1,
+          game,
+          isMaximizingPlayer: !isMaximizingPlayer,
+          move: newGameMoves[i],
+        })
       );
+      game.takeBack();
     }
     return bestMove;
   }
 };
 
-var minimaxRoot = function ({ depth, board, isMaximizingPlayer }) {
-  console.log("minimaxRoot:", depth, board, isMaximizingPlayer);
+var minimaxRoot = function ({ depth, board, color }) {
+  const game = new fen({ customStartBoard: board, startingColor: color });
+
+  LOGGING && game.displayBoard();
   return new Promise((resolve) => {
-    const color = isMaximizingPlayer ? "white" : "black";
-    const newGameMoves = generateMoves(board, color);
+    const isMaximizingPlayer = color === "white" ? true : false;
+    const newGameMoves = game.allMoves();
+    LOGGING && console.log("newGameMoves ROOT:", newGameMoves);
+
     let bestMoveFound;
     let bestMove;
 
@@ -158,12 +131,15 @@ var minimaxRoot = function ({ depth, board, isMaximizingPlayer }) {
       bestMove = -9999;
       for (let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        //          console.log("minimaxRoot: trying", newGameMove);
-        let result = lib.updateBoardMSAN(board, newGameMove);
-        console.log("result:", result);
-        //          displayBoard(result.board)
-        const value = minimax(depth - 1, result.board, !isMaximizingPlayer);
-        //          console.log("minimaxRoot: color:", color, " value for ", newGameMove, " is :", value);
+        game.mm(newGameMove);
+        const value = minimax({
+          depth: depth - 1,
+          game,
+          isMaximizingPlayer: !isMaximizingPlayer,
+          move: newGameMove,
+        });
+        LOGGING && console.log("value:", value, "move:", newGameMove);
+        game.takeBack();
         if (value >= bestMove) {
           bestMove = value;
           bestMoveFound = newGameMove;
@@ -173,34 +149,35 @@ var minimaxRoot = function ({ depth, board, isMaximizingPlayer }) {
       bestMove = 9999;
       for (let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        //          console.log("minimaxRoot: trying", newGameMove);
-        let result = lib.updateBoardMSAN(board, newGameMove);
-        //          displayBoard(result.board)
-        const value = minimax(depth - 1, result.board, !isMaximizingPlayer);
-        //          console.log("minimaxRoot: color:", color, " value for ", newGameMove, " is :", value);
+        game.mm(newGameMove);
+        const value = minimax({
+          depth: depth - 1,
+          game,
+          isMaximizingPlayer: !isMaximizingPlayer,
+          move: newGameMove,
+        });
+
+        LOGGING && console.log("value:", value, "move:", newGameMove);
+        game.takeBack();
         if (value <= bestMove) {
           bestMove = value;
           bestMoveFound = newGameMove;
         }
       }
     }
-    console.log("COUNT:", count);
+    LOGGING && console.log("COUNT:", count);
     count = 0;
     return resolve(bestMoveFound);
   });
 };
 
 function analyzeFenstring({ fenstring, color, depth = 2 }) {
-  // color means find the best move for that color
-  const isMaximizingPlayer = color == "white" ? true : false;
   const board = fenPosToBoard(fenstring);
-  return minimaxRoot({ depth, board, isMaximizingPlayer });
+  return minimaxRoot({ depth, board, color });
 }
 exports.analyzeFenstring = analyzeFenstring;
 
 function analyzeBoard({ board, color, depth = 2 }) {
-  // color means find the best move for that color
-  const isMaximizingPlayer = color == "white" ? true : false;
-  return minimaxRoot({ depth, board, isMaximizingPlayer });
+  return minimaxRoot({ depth, board, color });
 }
 exports.analyzeBoard = analyzeBoard;

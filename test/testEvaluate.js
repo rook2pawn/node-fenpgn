@@ -23,13 +23,16 @@ t("test analyze board", async function (test) {
   test.equals(result, "c2b1");
 });
 
-t("test pawn promo", async function (test) {
-  test.plan(2);
+t("test wanting pawn promo", async function (test) {
+  test.plan(1);
   const result = await Evaluate.analyzeFenstring({
-    fenstring: "8/8/8/8/8/1b6/PP5p/8",
+    fenstring: "8/8/8/8/8/1n4B1/PP5p/8",
     color: "black",
   });
   test.equals(result, "h2h1q");
+});
+t("test refusing pawn promo because of recapture", async function (test) {
+  test.plan(1);
   const result2 = await Evaluate.analyzeFenstring({
     fenstring: "8/8/8/8/8/1b6/PP5p/1R6",
     color: "black",
@@ -37,12 +40,12 @@ t("test pawn promo", async function (test) {
   test.equals(
     result2,
     "b3a2",
-    "black does not want promotion because of rook retake"
+    "black does not want promotion because of rook retake but instead will take a pawn"
   );
 });
 
 t("test no move available", async function (test) {
-  test.plan(5);
+  test.plan(4);
   var analyze = Evaluate.analyzeFenstring;
   test.equal(
     await analyze({ fenstring: "8/8/3p4/8/8/1p6/8/1P6", color: "black" }),
@@ -65,9 +68,14 @@ t("test no move available", async function (test) {
     "d6d5",
     "blacks only move"
   );
+});
+
+t("test white must stop black promotion", async function (test) {
+  test.plan(1);
+  var analyze = Evaluate.analyzeFenstring;
   test.equal(
-    await analyze({ fenstring: "8/8/3p4/8/8/6pp/8/1P4P1", color: "white" }),
-    "b1b2",
-    "black will retaliate against g1g2"
+    await analyze({ fenstring: "8/8/3p4/8/8/8/r6p/1P4P1", color: "white" }),
+    "g1h2",
+    "black will retaliate against anything other than g1h2"
   );
 });
