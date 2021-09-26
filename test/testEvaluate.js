@@ -79,3 +79,24 @@ t("test white must stop black promotion", async function (test) {
     "black will retaliate against anything other than g1h2"
   );
 });
+
+t.only("test white will ignore rook and go for mate", async function (test) {
+  test.plan(1);
+  var analyze = Evaluate.analyzeBoard;
+  const board = [
+    ["r", "n", "b", "q", "k", "b", "n", "r"],
+    ["p", "p", "p", "p", "p", "p", "p", "p"],
+    ["1", "1", "1", "1", "1", "1", "1", "1"],
+    ["1", "1", "1", "1", "1", "1", "1", "1"],
+    ["1", "1", "B", "1", "P", "1", "1", "1"],
+    ["1", "1", "1", "1", "1", "Q", "1", "r"],
+    ["P", "P", "P", "P", "1", "P", "P", "P"],
+    ["R", "N", "B", "Q", "K", "1", "N", "R"],
+  ];
+
+  test.equal(
+    await analyze({ board, color: "white", depth: 1 }),
+    "f3f7",
+    "white ignores rook and goes for mate"
+  );
+});

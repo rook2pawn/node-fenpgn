@@ -64,7 +64,7 @@ var minimax = function ({ depth, game, isMaximizingPlayer, move }) {
 
   LOGGING &&
     console.log(
-      "minimax depth, color, isMaximizingPlayer, move that brought us here:",
+      "\n****\nminimax depth, color, isMaximizingPlayer, move that brought us here:",
       depth,
       color,
       isMaximizingPlayer,
@@ -74,7 +74,7 @@ var minimax = function ({ depth, game, isMaximizingPlayer, move }) {
   LOGGING && game.displayBoard();
 
   if (depth === 0) {
-    let num = Evaluator.evaluateBoard(game.stateLive().board);
+    let num = Evaluator.evaluateBoard({ last: game.stateLive() });
     count++;
     return num;
   }

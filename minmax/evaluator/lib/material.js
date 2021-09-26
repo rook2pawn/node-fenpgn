@@ -33,7 +33,7 @@ function getPieceValue(piece) {
   }
 }
 
-const evaluate_material = function (board) {
+const evaluate_material = function ({ board }) {
   var totalEvaluation = 0;
   for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 8; j++) {
