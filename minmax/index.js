@@ -26,7 +26,13 @@ const fenPosToBoard = function (fenPos) {
 };
 exports.fenPosToBoard = fenPosToBoard;
 
-var minimaxRoot = function ({ depth, board, color }) {
+var minimaxRoot = function ({
+  depth,
+  board,
+  color,
+  useAB = true,
+  LOGGING = false,
+}) {
   let count = 0;
   let movesMade = 0;
 
@@ -42,11 +48,7 @@ var minimaxRoot = function ({ depth, board, color }) {
 
     LOGGING &&
       console.log(
-        "\n****\nminimax depth, color, isMaximizingPlayer, move that brought us here:",
-        depth,
-        color,
-        isMaximizingPlayer,
-        move
+        `\n\nMove:${move} Depth:${depth}, color:${color} isMaximizingPlayer:${isMaximizingPlayer}`
       );
     LOGGING && console.log("totalMoves so Far:", game.totalmovestring());
     LOGGING && game.displayBoard();
@@ -54,10 +56,13 @@ var minimaxRoot = function ({ depth, board, color }) {
     if (depth === 0) {
       let num = Evaluator.evaluateBoard({ last: game.stateLive() });
       count++;
+      LOGGING && console.log(`Depth:0 Evaluation:${num}`);
       return num;
     }
+
     var newGameMoves = game.allMoves();
-    LOGGING && console.log("newGameMoves:", newGameMoves);
+    LOGGING &&
+      console.log("newGameMoves for ", color, " newGameMoves:", newGameMoves);
     if (isMaximizingPlayer) {
       var bestMove = -9999;
       for (var i = 0; i < newGameMoves.length; i++) {
@@ -163,10 +168,10 @@ var minimaxRoot = function ({ depth, board, color }) {
   });
 };
 
-function analyzeFenstring({ fenstring, color, depth = 2 }) {
+function analyzeFenstring({ fenstring, color, depth = 2, useAB, LOGGING }) {
   const startTime = Date.now();
   const board = fenPosToBoard(fenstring);
-  return minimaxRoot({ depth, board, color }).then(
+  return minimaxRoot({ depth, board, color, useAB, LOGGING }).then(
     ({ bestMove, movesMade, count }) => {
       const finishTime = Date.now();
       const diff = finishTime - startTime;
@@ -182,9 +187,9 @@ function analyzeFenstring({ fenstring, color, depth = 2 }) {
 }
 exports.analyzeFenstring = analyzeFenstring;
 
-function analyzeBoard({ board, color, depth = 2 }) {
+function analyzeBoard({ board, color, depth = 2, useAB, LOGGING }) {
   const startTime = Date.now();
-  return minimaxRoot({ depth, board, color }).then(
+  return minimaxRoot({ depth, board, color, useAB, LOGGING }).then(
     ({ bestMove, movesMade, count }) => {
       const finishTime = Date.now();
       const diff = finishTime - startTime;
